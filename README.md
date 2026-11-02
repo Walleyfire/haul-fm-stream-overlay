@@ -1,4 +1,4 @@
-# Haul.FM Stream Overlay — GitHub Pages (v2.3.0)
+# Haul.FM Stream Overlay — GitHub Pages (v2.3.1)
 
 Haul.FM:n OBS-selainlähde. **Ei Cloudflare Workeria eikä omalla koneella jatkuvasti pyörivää Python-palvelinta.** GitHub Actions hakee radiometadatan ja julkaisee GitHub Pages -sivun.
 
@@ -34,6 +34,14 @@ GitHub Pages on staattinen hosting. Se ei voi muuntaa alkuperäistä HTTP-radiov
 5. GitHub Pages -osoite: **https://walleyfire.github.io/haul-fm-stream-overlay/**. OBS:ään **Selain**-lähde, leveys **580**, korkeus **170**.
 
 Testaa ensin sivua osoitteessa https://walleyfire.github.io/haul-fm-stream-overlay/?demo=1 (simuloitu kappale).
+
+## Ajastusten tilanne 2.11.2026
+
+GitHubin Actions-API:n suorituslistassa näkyivät vain `push`- ja `workflow_dispatch`-tapahtumat, **ei yhtään `schedule`-käynnistystä**. Viimeisimmät onnistuneet build- ja deploy-suoritukset havaitsivat kappaleen **Mylo – In My Arms (Radio Edit)**. Tämä vahvistaa, että Icecastin luku ja Pages-julkaisu toimivat käsin/koodimuutoksen laukaisemana, mutta ajastetun käynnistyksen toimintaa ei vielä ole vahvistettu.
+
+Ajastuksen cron-rivi päivitettiin arvoon `2-59/5 * * * *`, jotta GitHub rekisteröisi ajastuksen uudelleen. GitHub voi silti viivästyttää tai jättää suorittamatta ajastettuja tapahtumia. Tarkista [työnkulun suorituslista](https://github.com/Walleyfire/haul-fm-stream-overlay/actions/workflows/pages.yml): **Event**-sarakkeessa pitäisi näkyä myös `schedule`. Jos niitä ei ilmesty pidemmänkään ajan kuluessa, ota GitHub-tukeen yhteyttä; GitHub Pages + GitHub Actions ei voi taata 5 minuutin tarkkuutta.
+
+Version 2.3.1 sivu ei enää näytä yli 10 minuuttia vanhaa kappaletta `ON AIR`-tilassa, vaan ilmoittaa **PÄIVITYS MYÖHÄSSÄ**.
 
 ## Kappaleenvaihdon vianmääritys (v2.3.0)
 
@@ -73,6 +81,8 @@ Kappaleen kesto ja kansikuva tulevat erillisestä musiikkihakupalvelusta vain si
 - `.github/workflows/pages.yml` – GitHub Pages -julkaisuautomaatio
 
 ## Versiohistoria
+
+- **v2.3.1:** muutettu ajastusminuutit GitHubin cron-rekisteröinnin päivittämiseksi, erotettu yli 10 minuuttia vanhentuneet kappaletiedot live-tilasta ja kirjattu ajastuksen havaittu ongelma.
 
 - **v2.3.0:** vahvistettu Icecast/ICY-kappaletietojen käsittely, lisätty GitHub Actionsin automaattitestit ja virhediagnostiikka sekä viimeisen päivityksen ilmoitus verkkosivulle. Jos Pages näyttää repositorion alustustiedoston, siitä ilmoitetaan suoraan.
 
