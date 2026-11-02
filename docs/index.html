@@ -74,7 +74,22 @@
       const color = params.get('accent');
       if (color && /^#[0-9a-fA-F]{6}$/.test(color)) document.documentElement.style.setProperty('--accent', color);
       const state = {status:'loading',last_checked:0};
-      const apiUrl = 'nowplaying.json'; // GitHub Actions updates this on every Pages deployment.
+      const apiUrl = 'nowplaying.json'; // Fallback: GitHub Actions publishes every ~5 min.
+      // Optional direct HTTPS Icecast polling for faster updates (if CORS permits).
+      // Browser cannot read the original http://stream.haul.fm:8000 endpoint.
+      const liveCandidates = [
+        'https://stream.haul.fm/status-json.xsl',
+        'https://stream.haul.fm:8000/status-json.xsl'
+      ];
+      const customLive = params.get('liveApi');
+      if (customLive) {
+        try { const u = new URL(customLive);
+          if (u.protocol === 'https:') liveCandidates.unshift(u.href);
+        } catch (_) {}
+      }
+      let publishedSnapshot = null;
+      let directSnapshot = null;
+      let directInFlight = false;
       const demonstration = params.get('demo') === '1';
       let localFirstSeen = 0, lastTrack = '';
       let demoStarted = Date.now() / 1000 - 85;
@@ -202,9 +217,91 @@
         showArtwork(live?state.artwork:null);
         updateProgress();
       }
+      function liveSongFromIcecast(data){
+        const sources = data && data.icestats && data.icestats.source;
+        const list = Array.isArray(sources) ? sources : sources && typeof sources === 'object' ? [sources] : [];
+        const match = list.find(x => x && typeof x === 'object' &&
+          ['listenurl','mount','server_url'].some(k => String(x[k] || '').includes('/haulmpfm.mp3')))
+          || (list.length === 1 ? list[0] : null);
+        if (!match) return null;
+        let title = String(match.song || match.title || '').trim();
+        let artist = String(match.artist || '').trim();
+        if (!title || /^(unknown|n\/a|haul.?fm)$/i.test(title)) return null;
+        if (artist && title.toLowerCase().startsWith((artist+' - ').toLowerCase())) {
+          title = title.slice(artist.length + 3);
+        } else if (!artist && title.includes(' - ')){
+          const i = title.indexOf(' - ');
+          artist = title.slice(0,i).trim();
+          title = title.slice(i+3).trim();
+        }
+        return title ? {artist, title} : null;
+      }
+      function applySnapshot() {
+        if (demonstration) return;
+        const latest = publishedSnapshot || {status:'loading',last_checked:0};
+        const pubTime = Number(latest.last_checked || 0);
+        const useDirect = directSnapshot && Date.now()/1000 - directSnapshot.last_checked < 180 &&
+          directSnapshot.last_checked > pubTime + 10;
+        let data = useDirect
+          ? {status:'live',artist:directSnapshot.artist,title:directSnapshot.title,
+             artwork:null,duration:null,first_seen:directSnapshot.first_seen,
+             last_checked:directSnapshot.last_checked,source:'icecast-direct'}
+          : {...latest};
+        if (useDirect && latest.status === 'live' && latest.artist === data.artist && latest.title === data.title) {
+          data.artwork = latest.artwork || null;
+          data.duration = latest.duration || null;
+          data.first_seen = Number(latest.first_seen) > 0 ? latest.first_seen : data.first_seen;
+        }
+        const key = (data.artist || '') + '\u001f' + (data.title || '');
+        if (data.status === 'live' && data.title) {
+          if (key !== lastTrack) {
+            lastTrack = key;
+            localFirstSeen = Number(data.first_seen) > 0 ? Number(data.first_seen) : Date.now()/1000;
+          }
+          data.first_seen = localFirstSeen;
+        } else {
+          lastTrack = '';
+          localFirstSeen = 0;
+        }
+        Object.assign(state, data);
+        render();
+      }
+      async function pollDirect() {
+        if (demonstration || directInFlight) return;
+        directInFlight = true;
+        try {
+          for (const url of [...new Set(liveCandidates)]) {
+            try {
+              const controller = new AbortController();
+              const timer = setTimeout(() => controller.abort(), 6500);
+              let res;
+              try {
+                res = await fetch(url, {cache:'no-store',mode:'cors',signal:controller.signal});
+              } finally {
+                clearTimeout(timer);
+              }
+              if (!res.ok) continue;
+              const song = liveSongFromIcecast(await res.json());
+              if (!song) continue;
+              const now = Date.now()/1000;
+              const same = directSnapshot && directSnapshot.artist === song.artist &&
+                directSnapshot.title === song.title;
+              directSnapshot = {
+                ...song, last_checked:now, first_seen:same ? directSnapshot.first_seen : now
+              };
+              applySnapshot();
+              return;
+            } catch (_) {
+              // HTTPS, CORS or endpoint not supported. Fall back to published JSON.
+            }
+          }
+        } finally {
+          directInFlight = false;
+        }
+      }
       let pending=false;
       async function poll(){
-        if(pending) return;
+        if(pending)return;
         if(demonstration){
           Object.assign(state,{
             status:'live',artist:'The Midnight',title:'Sunset',
@@ -216,45 +313,29 @@
         }
         pending=true;
         try{
-          const res=await fetch(apiUrl + '?t=' + Date.now(),{cache:'no-store'});
-          if(!res.ok) throw new Error('API HTTP '+res.status);
+          const res=await fetch(apiUrl+'?t='+Date.now(),{cache:'no-store'});
+          if(!res.ok) throw new Error('Metadata HTTP '+res.status);
           const data=await res.json();
-          if(!data || typeof data !== 'object') throw new Error('Virheellinen kappaletieto');
+          if(!data || typeof data!=='object')throw new Error('Virheellinen kappaletieto');
           const checked=Number(data.last_checked||0);
-          if(!checked || checked<=0) {
-            data.status='unpublished';
-            data.title='';
-            data.artist='';
-          } else if (Date.now()/1000-checked>600) {
-            // No verified metadata update for ten minutes: old track is not
-            // the live track anymore; signal an Actions scheduling issue.
+          if(!checked || checked<=0){
+            data.status='unpublished';data.title='';data.artist='';
+          }else if(Date.now()/1000-checked>600){
             data.status='stale';
             data.error='GitHub Actions ei ole julkaissut kappaletietoja yli 10 minuuttiin';
-            data.title='';
-            data.artist='';
+            data.title='';data.artist='';
           }
-          // Keep a stable estimate within this browser session even when an edge worker restarts.
-          const key=(data.artist||'')+'\u001f'+(data.title||'');
-          if(data.status==='live' && data.title){
-            if(key !== lastTrack){
-              lastTrack=key;
-              localFirstSeen=Number(data.first_seen)>0 ? Number(data.first_seen) : Date.now()/1000;
-            }
-            data.first_seen=localFirstSeen;
-          }else{
-            lastTrack=''; localFirstSeen=0;
-          }
-          Object.assign(state,data);
-          render();
+          publishedSnapshot=data;
+          applySnapshot();
         }catch(e){
-          // Keep last known song temporarily rather than showing imaginary metadata.
-          if(!state.last_checked || Date.now()/1000-Number(state.last_checked)>45){
-            state.status='offline';render();
+          if(!publishedSnapshot){
+            publishedSnapshot={status:'offline',last_checked:0};
+            applySnapshot();
           }
-          console.warn('HaulFM API ei vastaa',e);
+          console.warn('Haul.FM: Pages JSON ei vastaa',e);
         }finally{pending=false;}
       }
-      updateBrandLogo();poll();setInterval(poll,30000);setInterval(updateProgress,1000);
+      updateBrandLogo();poll();pollDirect();setInterval(poll,30000);setInterval(pollDirect,120000);setInterval(updateProgress,1000);
     })();
   </script>
 
