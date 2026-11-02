@@ -1,4 +1,4 @@
-# Haul.FM Stream Overlay — GitHub Pages (v2.2.1)
+# Haul.FM Stream Overlay — GitHub Pages (v2.3.0)
 
 Haul.FM:n OBS-selainlähde. **Ei Cloudflare Workeria eikä omalla koneella jatkuvasti pyörivää Python-palvelinta.** GitHub Actions hakee radiometadatan ja julkaisee GitHub Pages -sivun.
 
@@ -35,6 +35,18 @@ GitHub Pages on staattinen hosting. Se ei voi muuntaa alkuperäistä HTTP-radiov
 
 Testaa ensin sivua osoitteessa https://walleyfire.github.io/haul-fm-stream-overlay/?demo=1 (simuloitu kappale).
 
+## Kappaleenvaihdon vianmääritys (v2.3.0)
+
+**Huomaa:** GitHub Pages ei itse hae Icecast-tietoja palvelimelta. `.github/workflows/pages.yml` hakee kappaletiedot GitHub Actionsissa noin viiden minuutin välein ja julkaisee JSON-tiedoston osana Pages-julkaisua. Jokainen kappaleenvaihto ei siksi näy välittömästi, ja lyhyt kappale saattaa jäädä kokonaan päivitysten väliin.
+
+1. Tarkista [Settings → Pages](https://github.com/Walleyfire/haul-fm-stream-overlay/settings/pages): **Source = GitHub Actions**, ei *Deploy from a branch*.
+2. Avaa [Publish Haul.FM overlay -työnkulku](https://github.com/Walleyfire/haul-fm-stream-overlay/actions/workflows/pages.yml), käynnistä **Run workflow** ja avaa uusimman suorituksen yhteenveto.
+3. Yhteenvedossa näkyy **Haul.FM status**, **Metadata source**, **Track** ja mahdollinen **Fetch issue**. Jos status on offline tai no_metadata, haku ei saanut kappalenimeä. Haul.FM:n HTTP-portin 8000 tavoitettavuutta GitHubin palvelimelta ei ole voitu vahvistaa.
+4. Avaa julkaistusta sivusta [nowplaying.json](https://walleyfire.github.io/haul-fm-stream-overlay/nowplaying.json). Etsi `last_checked`: sen täytyy olla uusi Unix-aikaleima. Jos se on `0`, katselet repositorion alustustiedostoa, et GitHub Actionsin tuottamaa päivitystä. Korjaa Pagesin julkaisulähde.
+5. GitHub Pages -sivu tarkistaa tiedot 30 sekunnin välein ja näyttää radiotietojen viimeisen tarkistusajan. Yli 16 minuuttia vanhaa tietoa ei enää näytetä ajantasaisena.
+
+Kappaleen kesto ja kansikuva tulevat erillisestä musiikkihakupalvelusta vain silloin, kun sen tulos vastaa artistia ja kappaletta. Se ei vaikuta itse artisti- ja kappaletietojen vaihtumiseen.
+
 ## Päivittyminen ja rajoitukset
 
 - GitHub Actions -työnkulku `.github/workflows/pages.yml` käynnistyy ajastetusti noin **5 minuutin välein**, manuaalisesti ja koodimuutosten jälkeen. GitHub voi viivästyttää tai jättää ajastettuja suorituksia tekemättä.
@@ -61,6 +73,8 @@ Testaa ensin sivua osoitteessa https://walleyfire.github.io/haul-fm-stream-overl
 - `.github/workflows/pages.yml` – GitHub Pages -julkaisuautomaatio
 
 ## Versiohistoria
+
+- **v2.3.0:** vahvistettu Icecast/ICY-kappaletietojen käsittely, lisätty GitHub Actionsin automaattitestit ja virhediagnostiikka sekä viimeisen päivityksen ilmoitus verkkosivulle. Jos Pages näyttää repositorion alustustiedoston, siitä ilmoitetaan suoraan.
 
 - **v2.2.1:** korjattu äänentoiston virhetilojen käsittely, äänilähteen aikakatkaisu ja yhden klikkauksen toistoyritys ilman näkyviä hallintapainikkeita. HTTPS-lähteen toimivuutta ei ole vielä voitu vahvistaa.
 
