@@ -27,8 +27,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Validate metadata parser
+        run: python3 scripts/update_nowplaying.py --self-test
       - name: Fetch Haul.FM metadata
         run: python3 scripts/update_nowplaying.py
+      - name: Verify metadata publication
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, pathlib
+          data=json.loads(pathlib.Path('docs/nowplaying.json').read_text(encoding='utf-8'))
+          assert data['status'] in ('live','no_metadata','offline')
+          assert int(data['last_checked']) > 0
+          print('Metadata status:', data['status'])
+          print('Source:', data.get('source'))
+          print('Title:', data.get('title'))
+          print('Issue:', data.get('error'))
+          with open(__import__('os').environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as f:
+              f.write(f"### Haul.FM status: {data['status']}\n\n")
+              f.write(f"- Metadata source: {data.get('source')}\n")
+              f.write(f"- Track: {data.get('artist')} — {data.get('title')}\n")
+              if data.get('error'):
+                  f.write(f"- Fetch issue: {data['error']}\n")
+          PY
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages files
