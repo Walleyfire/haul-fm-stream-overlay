@@ -191,6 +191,7 @@
         $('hint').textContent=live?'Haul.FM • Kappale havaittu radiosta':
           s==='offline'?'Tarkista radioaseman yhteys':
           'Haul.FM • Live radio';
+        if(window.HAULFM_AUDIO_STATUS) $('hint').textContent=window.HAULFM_AUDIO_STATUS;
         showArtwork(live?state.artwork:null);
         updateProgress();
       }
@@ -238,87 +239,132 @@
     })();
   </script>
 
-  <!-- Ääni toistetaan ilman näkyviä toisto- tai voimakkuussäätimiä. -->
+  <!-- Radioääni; ei näkyviä säätimiä tai soittopainikkeita. -->
   <audio id="haulfmRadioAudio" autoplay playsinline preload="none" aria-hidden="true"></audio>
   <script>
     (() => {
       'use strict';
-      // Github Pages uses HTTPS. A working HTTPS radio stream is preferred.
-      // The provided HTTP origin is attempted last for OBS environments that allow it.
-      // ?stream=https%3A%2F%2F... overrides the stream address when Haul.FM provides one.
-      const params = new URLSearchParams(window.location.search);
+      // Browsers require a secure source AND may require a real user gesture.
+      // No GitHub Pages code can bypass these browser-enforced restrictions.
+      const params = new URLSearchParams(location.search);
       if (params.get('demo') === '1') return;
+
       const audio = document.getElementById('haulfmRadioAudio');
-      const configured = params.get('stream');
+      const hint = document.getElementById('hint');
       const sources = [];
-      if (configured) {
+      const selected = params.get('stream');
+      if (selected) {
         try {
-          const url = new URL(configured);
-          if (url.protocol === 'https:' || (url.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(url.hostname))) sources.push(url.href);
-        } catch (_) {}
+          const u = new URL(selected);
+          if (u.protocol === 'https:' || (u.protocol === 'http:' && ['localhost','127.0.0.1'].includes(u.hostname))) {
+            sources.push(u.href);
+          }
+        } catch (error) { console.warn('Haul.FM: virheellinen stream-parametri', error); }
       }
+      // These HTTPS alternatives are unverified. The HTTP URL is the original
+      // user-supplied stream; secure browsers may block upgrading it to TLS.
       sources.push(
         'https://stream.haul.fm/haulmpfm.mp3',
         'https://stream.haul.fm:8000/haulmpfm.mp3',
         'http://stream.haul.fm:8000/haulmpfm.mp3'
       );
-      const uniqueSources = [...new Set(sources)];
+
+      const urls = [...new Set(sources)];
       let index = 0;
       let attemptId = 0;
-      let handledFailure = 0;
-      let retryTimer = null;
-      let stoppedForAutoplay = false;
+      let blocked = false;
+      let watchdog = null;
+      let retry = null;
+      let failedAttempt = -1;
       audio.volume = 1;
       audio.muted = false;
 
-      function tryNextSource() {
-        clearTimeout(retryTimer);
-        stoppedForAutoplay = false;
-        if (index >= uniqueSources.length) {
-          console.warn('Haul.FM: äänivirran yhteys epäonnistui. HTTPS-stream ei ole vahvistettu.');
+      function status(message) {
+        window.HAULFM_AUDIO_STATUS = message;
+        if (hint) {
+          hint.textContent = message || 'Haul.FM • Live radio';
+          hint.title = message || '';
+        }
+      }
+      function clearTimers() {
+        clearTimeout(watchdog);
+        clearTimeout(retry);
+        watchdog = null;
+        retry = null;
+      }
+      function fail(id, reason) {
+        if (id !== attemptId || failedAttempt === id || blocked) return;
+        failedAttempt = id;
+        clearTimers();
+        console.warn('Haul.FM: äänilähde ei toiminut:', reason, urls[index - 1]);
+        retry = setTimeout(nextSource, 600);
+      }
+      function nextSource() {
+        clearTimers();
+        blocked = false;
+        if (index >= urls.length) {
+          status('Ääni ei toimi • HTTPS-äänivirta tarvitaan');
+          console.warn('Haul.FM: kaikki stream-vaihtoehdot epäonnistuivat. Tarkista verkkokonsoli.');
           index = 0;
-          retryTimer = setTimeout(tryNextSource, 60000);
+          retry = setTimeout(nextSource, 60000);
           return;
         }
-        const source = uniqueSources[index++];
         const id = ++attemptId;
-        console.info('Haul.FM: kokeillaan radiovirtaa', source);
+        const url = urls[index++];
+        status('');
+        console.info('Haul.FM: kokeillaan radiota', url);
         audio.pause();
-        audio.src = source;
+        audio.src = url;
         audio.load();
-        const result = audio.play();
-        if (result && typeof result.catch === 'function') {
-          result.catch(error => {
+
+        watchdog = setTimeout(() => fail(id, '15 sekunnin aikakatkaisu'), 15000);
+        const attempt = audio.play();
+        if (attempt && typeof attempt.catch === 'function') {
+          attempt.catch(error => {
             if (id !== attemptId) return;
             if (error && error.name === 'NotAllowedError') {
-              stoppedForAutoplay = true;
-              console.warn('Haul.FM: selain esti automaattisen äänen. OBS:n selainlähteen asetukset tai käyttäjän vuorovaikutus vaaditaan.');
+              blocked = true;
+              clearTimers();
+              status('Selain esti äänen • klikkaa overlayta kerran');
+              console.warn('Haul.FM: äänen automaattinen toisto estetty selaimen asetuksilla');
               return;
             }
-            failAttempt(id);
+            if (error && error.name === 'AbortError') return;
+            fail(id, error ? error.name : 'play() epäonnistui');
           });
         }
       }
-      function failAttempt(id) {
-        if (stoppedForAutoplay || id !== attemptId || handledFailure === id) return;
-        handledFailure = id;
-        clearTimeout(retryTimer);
-        retryTimer = setTimeout(tryNextSource, 600);
-      }
-      audio.addEventListener('error', () => failAttempt(attemptId));
-      audio.addEventListener('ended', () => failAttempt(attemptId));
+
       audio.addEventListener('playing', () => {
-        clearTimeout(retryTimer);
-        console.info('Haul.FM: radioääni käynnissä');
+        blocked = false;
+        clearTimers();
+        status('');
+        console.info('Haul.FM: radioääni toistuu');
       });
-      // A click in a normal browser can unlock autoplay without adding player controls.
-      document.addEventListener('pointerdown', () => {
-        if (!stoppedForAutoplay) return;
-        stoppedForAutoplay = false;
-        const result = audio.play();
-        if (result && typeof result.catch === 'function') result.catch(() => failAttempt(attemptId));
+      audio.addEventListener('error', () => fail(attemptId, audio.error ? 'MediaError ' + audio.error.code : 'medialähteen virhe'));
+      audio.addEventListener('ended', () => fail(attemptId, 'lähetys katkesi'));
+      document.addEventListener('click', () => {
+        if (!blocked) return;
+        // Only a real user gesture can unblock autoplay. No visible button.
+        blocked = false;
+        status('');
+        const id = attemptId;
+        watchdog = setTimeout(() => fail(id, '15 sekunnin aikakatkaisu'), 15000);
+        const attempt = audio.play();
+        if (attempt && typeof attempt.catch === 'function') {
+          attempt.catch(error => {
+            if (id !== attemptId) return;
+            if (error && error.name === 'NotAllowedError') {
+              blocked = true;
+              clearTimers();
+              status('Selain esti äänen • klikkaa overlayta kerran');
+            } else if (!error || error.name !== 'AbortError') {
+              fail(id, error ? error.name : 'äänivirran lataus epäonnistui');
+            }
+          });
+        }
       });
-      tryNextSource();
+      nextSource();
     })();
   </script>
 </body>
