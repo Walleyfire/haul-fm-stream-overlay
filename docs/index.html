@@ -179,12 +179,13 @@
         updateBrandLogo();
         const s=state.status||'loading';
         card.classList.toggle('is-loading',s==='loading');
-        card.classList.toggle('is-offline',s==='offline');
+        card.classList.toggle('is-offline',s==='offline'||s==='stale');
         const live=s==='live';
-        $('liveText').textContent=s==='unpublished'?'EI JULKAISTU':s==='offline'?'OFFLINE':s==='loading'?'YHDISTETÄÄN':'ON AIR';
+        $('liveText').textContent=s==='stale'?'PÄIVITYS MYÖHÄSSÄ':s==='unpublished'?'EI JULKAISTU':s==='offline'?'OFFLINE':s==='loading'?'YHDISTETÄÄN':'ON AIR';
         $('eyebrow').textContent=live?'NOW PLAYING':'RADIO STREAM';
-        $('song').textContent=live?state.title:(s==='offline'?'Yhteys katkennut':'Haul.FM');
+        $('song').textContent=live?state.title:(s==='stale'?'Kappaletiedot vanhentuneet':s==='offline'?'Yhteys katkennut':'Haul.FM');
         $('artist').textContent=live?(state.artist||'Haul.FM Radio'):
+          s==='stale'?'GitHub Actions ei ole julkaissut tuoretta kappaletta':
           s==='offline'?'Radioaseman tiedot eivät ole saatavilla':
           s==='no_metadata'?'Kappaletietoja ei saatavilla':
           s==='unpublished'?'GitHub Pages: valitse julkaisuksi GitHub Actions':
@@ -194,6 +195,7 @@
         const checkTime=Number(state.last_checked||0);
         const age=checkTime>0?Math.max(0,Math.floor((Date.now()/1000-checkTime)/60)):null;
         $('hint').textContent=s==='unpublished'?'GitHub Pages: työnkulun julkaisu puuttuu':
+          s==='stale'&&age!=null?'Viimeisin tarkistus '+age+' min sitten':
           s==='offline'?(state.error?'Haul.FM: kappaletietojen haku epäonnistui':'Tarkista radion yhteys'):
           age!=null?'Radiotiedot tarkistettu '+age+' min sitten':'Haul.FM • Live radio';
         if(window.HAULFM_AUDIO_STATUS) $('hint').textContent=window.HAULFM_AUDIO_STATUS;
@@ -223,9 +225,13 @@
             data.status='unpublished';
             data.title='';
             data.artist='';
-          } else if (Date.now()/1000-checked>960) {
-            data.status='offline';
-            data.error='Julkaistut kappaletiedot ovat yli 16 minuuttia vanhat';
+          } else if (Date.now()/1000-checked>600) {
+            // No verified metadata update for ten minutes: old track is not
+            // the live track anymore; signal an Actions scheduling issue.
+            data.status='stale';
+            data.error='GitHub Actions ei ole julkaissut kappaletietoja yli 10 minuuttiin';
+            data.title='';
+            data.artist='';
           }
           // Keep a stable estimate within this browser session even when an edge worker restarts.
           const key=(data.artist||'')+'\u001f'+(data.title||'');
