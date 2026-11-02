@@ -1,6 +1,17 @@
-# Haul.FM Stream Overlay — GitHub Pages (v2.1.0)
+# Haul.FM Stream Overlay — GitHub Pages (v2.2.0)
 
 Haul.FM:n OBS-selainlähde. **Ei Cloudflare Workeria eikä omalla koneella jatkuvasti pyörivää Python-palvelinta.** GitHub Actions hakee radiometadatan ja julkaisee GitHub Pages -sivun.
+
+## Radioääni (v2.2.0)
+
+Overlay sisältää **automaattisesti käynnistyvän piilotetun HTML-äänisoittimen**. Sivulla **ei ole play/pause-näppäimiä eikä äänenvoimakkuussäädintä**. OBS:ssä äänenvoimakkuuden voi tarvittaessa säätää OBS:n äänimikseristä.
+
+- Ensisijaisesti kokeillaan `https://stream.haul.fm/haulmpfm.mp3`, sitten `https://stream.haul.fm:8000/haulmpfm.mp3` ja viimeiseksi alkuperäistä `http://stream.haul.fm:8000/haulmpfm.mp3`-osoitetta.
+- **Tärkeää:** HTTPS-osoitteiden olemassaoloa ja toimivuutta ei ole pystytty vahvistamaan. GitHub Pages on HTTPS-sivu, ja selain voi estää HTTP-äänivirran sekä äänen automaattisen käynnistymisen. Siksi ääni **ei ole vielä taatusti toimiva** pelkällä GitHub Pagesilla.
+- Jos Haul.FM tarjoaa toimivan HTTPS-muotoisen suoran audiostreamin, sen voi antaa sivulle URL-parametrina `?stream=https%3A%2F%2F...` (oikea HTTPS-osoite URL-koodattuna).
+- OBS Studio: avaa selainlähteen ominaisuudet ja ota tarvittaessa käyttöön **Hallitse ääntä OBS:n kautta (Control audio via OBS)**. OBS:n äänimikserissä voi silloin hallita lähteen ääntä. 
+- Jos stream ei toimi sivulle upotettuna, **varma vararatkaisu OBS:ssä** on lisätä *Medialähde (Media Source)*, poistaa *Paikallinen tiedosto (Local file)* -valinta ja asettaa URL:ksi `http://stream.haul.fm:8000/haulmpfm.mp3`. Tämä on erillinen OBS-äänilähde, ei HTML-overlayssa toistettava ääni. Vältä kahden äänilähteen samanaikaista toistoa.
+- Tavallisen selaimen automaattisen toiston esto voi vaatia käyttäjän napsautuksen; OBS:n selainlähde toimii eri selaimen asetuksilla. `?demo=1` näyttää testikappaleen eikä käynnistä radion ääntä.
 
 ## Käyttöönotto
 
@@ -27,7 +38,7 @@ Testaa ensin sivua osoitteessa https://walleyfire.github.io/haul-fm-stream-overl
 - Oikealla Haul.FM:n virallinen wordmark, vasemmalla kappaleen kansikuva tai virallinen Haul.FM-kuvake.
 - Aikateksti sekä etenemispalkki **vain kun kesto tunnetaan** (tuntemattomalla kestolla aikateksti muodossa `01:25 / --:--`, ei keinotekoista palkkia).
 - Parametrit: `?demo=1`, `?scale=1.2`, `?accent=%2300E5AD`.
-- Overlay ei toista musiikkia.
+- Overlay yrittää toistaa Haul.FM:n live-radion äänen automaattisesti ilman näkyviä säätimiä. Se edellyttää, että selaimelle sopiva stream-osoite toimii.
 
 ## Kansiot
 
@@ -38,6 +49,8 @@ Testaa ensin sivua osoitteessa https://walleyfire.github.io/haul-fm-stream-overl
 - `.github/workflows/pages.yml` – GitHub Pages -julkaisuautomaatio
 
 ## Versiohistoria
+
+- **v2.2.0:** lisätty automaattinen HTML-radioääni ilman toisto-, tauko- tai äänenvoimakkuussäätimiä. HTTPS-saatavuus ja automaattinen toisto pitää vielä varmistaa OBS:ssä.
 
 - **v2.1.0:** GitHub Pages + GitHub Actions; Cloudflare Worker -riippuvuus poistettu; ajastettu metadatahaku ja automaattinen Pages-julkaisu.
 - **v2.0.0:** GitHub Pages -prototyyppi, jossa oli Cloudflare Worker -vaihtoehto.
