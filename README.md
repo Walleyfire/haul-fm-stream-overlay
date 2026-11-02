@@ -1,8 +1,8 @@
-# Haul.FM Stream Overlay — GitHub Pages (v2.2.0)
+# Haul.FM Stream Overlay — GitHub Pages (v2.2.1)
 
 Haul.FM:n OBS-selainlähde. **Ei Cloudflare Workeria eikä omalla koneella jatkuvasti pyörivää Python-palvelinta.** GitHub Actions hakee radiometadatan ja julkaisee GitHub Pages -sivun.
 
-## Radioääni (v2.2.0)
+## Radioääni (v2.2.1)
 
 Overlay sisältää **automaattisesti käynnistyvän piilotetun HTML-äänisoittimen**. Sivulla **ei ole play/pause-näppäimiä eikä äänenvoimakkuussäädintä**. OBS:ssä äänenvoimakkuuden voi tarvittaessa säätää OBS:n äänimikseristä.
 
@@ -12,6 +12,18 @@ Overlay sisältää **automaattisesti käynnistyvän piilotetun HTML-äänisoitt
 - OBS Studio: avaa selainlähteen ominaisuudet ja ota tarvittaessa käyttöön **Hallitse ääntä OBS:n kautta (Control audio via OBS)**. OBS:n äänimikserissä voi silloin hallita lähteen ääntä. 
 - Jos stream ei toimi sivulle upotettuna, **varma vararatkaisu OBS:ssä** on lisätä *Medialähde (Media Source)*, poistaa *Paikallinen tiedosto (Local file)* -valinta ja asettaa URL:ksi `http://stream.haul.fm:8000/haulmpfm.mp3`. Tämä on erillinen OBS-äänilähde, ei HTML-overlayssa toistettava ääni. Vältä kahden äänilähteen samanaikaista toistoa.
 - Tavallisen selaimen automaattisen toiston esto voi vaatia käyttäjän napsautuksen; OBS:n selainlähde toimii eri selaimen asetuksilla. `?demo=1` näyttää testikappaleen eikä käynnistä radion ääntä.
+
+
+### Jos verkkosivulla ei kuulu ääntä
+
+Versiossa 2.2.1 näkyy alarivillä virhetilanteessa syy, ei soittopainikkeita:
+
+- **Selain esti äänen • klikkaa overlayta kerran**: selain torjuu automaattisen äänen. Klikkaus voi sallia toiston, jos valittu äänivirta on muuten toimiva.
+- **Ääni ei toimi • HTTPS-äänivirta tarvitaan**: yksikään kokeiltu äänilähde ei vastannut selaimelle sopivasti. Pelkkä klikkaaminen ei voi korjata rikkoutunutta tai HTTP-only streamia.
+
+**Huomautus:** `https://stream.haul.fm/haulmpfm.mp3` ja portin 8000 HTTPS-versio ovat vain mahdollisia osoitteita, eivät vahvistettuja toimivia kuuntelulinkkejä. Jos Haul.FM:n oma nettisoitin toimii, oikean HTTPS-lähteen voi etsiä selaimessa F12 → Network → Media / All → käynnistä radion toisto ja tarkista audiopyynnön URL. Jos löydät toimivan linkin, testaa sitä overlayn URL:ssa `?stream=URL_KOODATTUNA`. HTTP-linkki ei riitä turvalliseen GitHub Pages -upotukseen.
+
+GitHub Pages on staattinen hosting. Se ei voi muuntaa alkuperäistä HTTP-radiovirtaa HTTPS-äänivirraksi eikä ohittaa selaimen autoplay-käytäntöjä. Verkkosivulle ei ole mahdollista taata automaattista ääntä ilman toimivaa HTTPS-äänilähdettä ja selaimen myöntämää toisto-oikeutta. OBS:n erillinen medialähde alkuperäiselle HTTP-streamille pysyy varmimpana vaihtoehtona OBS-käytössä.
 
 ## Käyttöönotto
 
@@ -49,6 +61,8 @@ Testaa ensin sivua osoitteessa https://walleyfire.github.io/haul-fm-stream-overl
 - `.github/workflows/pages.yml` – GitHub Pages -julkaisuautomaatio
 
 ## Versiohistoria
+
+- **v2.2.1:** korjattu äänentoiston virhetilojen käsittely, äänilähteen aikakatkaisu ja yhden klikkauksen toistoyritys ilman näkyviä hallintapainikkeita. HTTPS-lähteen toimivuutta ei ole vielä voitu vahvistaa.
 
 - **v2.2.0:** lisätty automaattinen HTML-radioääni ilman toisto-, tauko- tai äänenvoimakkuussäätimiä. HTTPS-saatavuus ja automaattinen toisto pitää vielä varmistaa OBS:ssä.
 
