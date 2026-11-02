@@ -2,6 +2,14 @@
 
 Tumppi066:n TruckersFM Stream Overlay -projektin innoittama erillinen Haul.FM:n OBS-overlay. Tämä versio on tehty **GitHub Pages** -julkaisua varten. Aiemman paikallisen Python-palvelimen käyttö ei ole tarpeen, kun HTTPS-kappaletietopalvelu on julkaistu.
 
+## Julkaisutilanne (2.11.2026)
+
+Projektin tiedostot ovat jo GitHub-repositorion `main`-haarassa: https://github.com/Walleyfire/haul-fm-stream-overlay.
+
+**GitHub Pagesin käyttöönotto:** Avaa [Settings → Pages](https://github.com/Walleyfire/haul-fm-stream-overlay/settings/pages) ja valitse **Deploy from a branch → main → /docs → Save**. Julkaisun jälkeen overlayn osoite on https://walleyfire.github.io/haul-fm-stream-overlay/.
+
+**Reaaliaikaiset kappaletiedot:** GitHub Pages ei suorita `worker/src/index.js`-koodia. Julkaise se erikseen Cloudflare Workersiin (ohje kohdassa A), tarkista `/api/nowplaying` ja aseta julkaistu osoite tiedostoon `docs/config.js`. **Kunnes API-osoite on määritetty, sivu näyttää asennuskehotteen eikä oikeaa kappaletietoa.** Testiä varten voit avata sivun parametrilla `?demo=1`.
+
 ## Ulkoasu ja toiminnot
 
 - 580 × 170 px, läpinäkyvä tausta ja pyöristetyt kulmat **ilman ulkovarjoa**.
@@ -59,8 +67,8 @@ Käytä **omaa** Workerin todellista osoitetta. Älä jätä esimerkkiarvoa. Jos
 Tavoiteltu uusi julkinen repo: `Walleyfire/haul-fm-stream-overlay`.
 
 **Vaihtoehto 1 — GitHub-verkkosivu:**
-1. Luo uusi **Public**-repo `haul-fm-stream-overlay` tilillesi https://github.com/new.
-2. Lataa tämän paketin tiedostot repoon siten, että `docs/` ja `worker/`-kansiot sekä `README.md` ovat repojuuressa.
+1. Repositorio on jo luotu: https://github.com/Walleyfire/haul-fm-stream-overlay.
+2. Tiedostot ovat jo repositorion juuressa (`docs/`, `worker/` ja `README.md`).
 3. Avaa repo → **Settings → Pages**.
 4. Valitse **Deploy from a branch**, branch **main**, folder **/docs**, paina **Save**.
 5. GitHub Pages -osoite on julkaisun onnistuttua `https://walleyfire.github.io/haul-fm-stream-overlay/`.
