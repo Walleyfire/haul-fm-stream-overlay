@@ -237,5 +237,89 @@
       updateBrandLogo();poll();setInterval(poll,30000);setInterval(updateProgress,1000);
     })();
   </script>
+
+  <!-- Ääni toistetaan ilman näkyviä toisto- tai voimakkuussäätimiä. -->
+  <audio id="haulfmRadioAudio" autoplay playsinline preload="none" aria-hidden="true"></audio>
+  <script>
+    (() => {
+      'use strict';
+      // Github Pages uses HTTPS. A working HTTPS radio stream is preferred.
+      // The provided HTTP origin is attempted last for OBS environments that allow it.
+      // ?stream=https%3A%2F%2F... overrides the stream address when Haul.FM provides one.
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('demo') === '1') return;
+      const audio = document.getElementById('haulfmRadioAudio');
+      const configured = params.get('stream');
+      const sources = [];
+      if (configured) {
+        try {
+          const url = new URL(configured);
+          if (url.protocol === 'https:' || (url.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(url.hostname))) sources.push(url.href);
+        } catch (_) {}
+      }
+      sources.push(
+        'https://stream.haul.fm/haulmpfm.mp3',
+        'https://stream.haul.fm:8000/haulmpfm.mp3',
+        'http://stream.haul.fm:8000/haulmpfm.mp3'
+      );
+      const uniqueSources = [...new Set(sources)];
+      let index = 0;
+      let attemptId = 0;
+      let handledFailure = 0;
+      let retryTimer = null;
+      let stoppedForAutoplay = false;
+      audio.volume = 1;
+      audio.muted = false;
+
+      function tryNextSource() {
+        clearTimeout(retryTimer);
+        stoppedForAutoplay = false;
+        if (index >= uniqueSources.length) {
+          console.warn('Haul.FM: äänivirran yhteys epäonnistui. HTTPS-stream ei ole vahvistettu.');
+          index = 0;
+          retryTimer = setTimeout(tryNextSource, 60000);
+          return;
+        }
+        const source = uniqueSources[index++];
+        const id = ++attemptId;
+        console.info('Haul.FM: kokeillaan radiovirtaa', source);
+        audio.pause();
+        audio.src = source;
+        audio.load();
+        const result = audio.play();
+        if (result && typeof result.catch === 'function') {
+          result.catch(error => {
+            if (id !== attemptId) return;
+            if (error && error.name === 'NotAllowedError') {
+              stoppedForAutoplay = true;
+              console.warn('Haul.FM: selain esti automaattisen äänen. OBS:n selainlähteen asetukset tai käyttäjän vuorovaikutus vaaditaan.');
+              return;
+            }
+            failAttempt(id);
+          });
+        }
+      }
+      function failAttempt(id) {
+        if (stoppedForAutoplay || id !== attemptId || handledFailure === id) return;
+        handledFailure = id;
+        clearTimeout(retryTimer);
+        retryTimer = setTimeout(tryNextSource, 600);
+      }
+      audio.addEventListener('error', () => failAttempt(attemptId));
+      audio.addEventListener('ended', () => failAttempt(attemptId));
+      audio.addEventListener('playing', () => {
+        clearTimeout(retryTimer);
+        console.info('Haul.FM: radioääni käynnissä');
+      });
+      // A click in a normal browser can unlock autoplay without adding player controls.
+      document.addEventListener('pointerdown', () => {
+        if (!stoppedForAutoplay) return;
+        stoppedForAutoplay = false;
+        const result = audio.play();
+        if (result && typeof result.catch === 'function') result.catch(() => failAttempt(attemptId));
+      });
+      tryNextSource();
+    })();
+  </script>
 </body>
 </html>
