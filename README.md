@@ -1,4 +1,4 @@
-# Haul.FM Stream Overlay — GitHub Pages (v2.3.1)
+# Haul.FM Stream Overlay — GitHub Pages (v2.4.0)
 
 Haul.FM:n OBS-selainlähde. **Ei Cloudflare Workeria eikä omalla koneella jatkuvasti pyörivää Python-palvelinta.** GitHub Actions hakee radiometadatan ja julkaisee GitHub Pages -sivun.
 
@@ -43,6 +43,20 @@ Ajastuksen cron-rivi päivitettiin arvoon `2-59/5 * * * *`, jotta GitHub rekiste
 
 Version 2.3.1 sivu ei enää näytä yli 10 minuuttia vanhaa kappaletta `ON AIR`-tilassa, vaan ilmoittaa **PÄIVITYS MYÖHÄSSÄ**.
 
+## Nopeampi kappaleiden päivitys (v2.4.0)
+
+Selain tarkistaa **GitHub Pagesin `nowplaying.json`-tiedoston edelleen 30 sekunnin välein** ja yrittää nyt lisäksi lukea Icecastin ajantasaiset kappaletiedot **suoraan HTTPS-yhteydellä kahden minuutin välein**.
+
+Suorat osoitteet, joita selain kokeilee:
+- `https://stream.haul.fm/status-json.xsl`
+- `https://stream.haul.fm:8000/status-json.xsl`
+
+**Näiden HTTPS-osoitteiden toimivuutta tai CORS-lupaa ei ole vahvistettu.** Siksi tämä ei takaa kahden minuutin päivitystä. Jos selain estää pyynnöt tai osoitteet eivät vastaa, overlay käyttää edelleen GitHub Actionsin tuottamaa JSON-tiedostoa ja sen vähintään viiden minuutin ajastusrajoitusta. HTTP-osoitetta ei voi lukea turvallisesti GitHub Pagesin HTTPS-sivulla.
+
+Jos löydät varmasti toimivan CORS-sallitun HTTPS-Icecast-lähteen, voit antaa sen parametrilla `?liveApi=https%3A%2F%2F...%2Fstatus-json.xsl`, jolloin se kokeillaan ensin. Älä käytä API-avaimen tai salasanan sisältävää URL:ia julkisessa osoitteessa.
+
+Kappaleen kansikuva ja kesto tulevat edelleen GitHubin julkaisemasta metadatahausta; jos kappale vaihtuu suorasta Icecast-haun kautta ennen seuraavaa GitHub-julkaisua, näyttöön tulee uusi nimi heti mutta uusi kansikuva ja kesto vasta seuraavassa julkaisussa.
+
 ## Kappaleenvaihdon vianmääritys (v2.3.0)
 
 **Huomaa:** GitHub Pages ei itse hae Icecast-tietoja palvelimelta. `.github/workflows/pages.yml` hakee kappaletiedot GitHub Actionsissa noin viiden minuutin välein ja julkaisee JSON-tiedoston osana Pages-julkaisua. Jokainen kappaleenvaihto ei siksi näy välittömästi, ja lyhyt kappale saattaa jäädä kokonaan päivitysten väliin.
@@ -81,6 +95,8 @@ Kappaleen kesto ja kansikuva tulevat erillisestä musiikkihakupalvelusta vain si
 - `.github/workflows/pages.yml` – GitHub Pages -julkaisuautomaatio
 
 ## Versiohistoria
+
+- **v2.4.0:** lisätty selaimeen kokeellinen kahden minuutin välein tehtävä suora HTTPS-Icecast-tarkistus; GitHub Pagesin 30 sekunnin JSON-tarkistus ja GitHub Actionsin viiden minuutin päivitys säilytetty varalla. Suora haku edellyttää CORS-lupaa ja toimivaa HTTPS-osoitetta.
 
 - **v2.3.1:** muutettu ajastusminuutit GitHubin cron-rekisteröinnin päivittämiseksi, erotettu yli 10 minuuttia vanhentuneet kappaletiedot live-tilasta ja kirjattu ajastuksen havaittu ongelma.
 
