@@ -64,7 +64,6 @@
       <div class="song-progress" id="songProgress" role="progressbar" aria-label="Arvioitu kappaleen eteneminen" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="song-progress-fill" id="progressFill"></div></div>
     </section>
   </main>
-  <script src="config.js"></script>
   <script>
     (() => {
       'use strict';
@@ -75,9 +74,7 @@
       const color = params.get('accent');
       if (color && /^#[0-9a-fA-F]{6}$/.test(color)) document.documentElement.style.setProperty('--accent', color);
       const state = {status:'loading',last_checked:0};
-      const configuredApi = params.get('api') || (window.HAULFM_CONFIG && window.HAULFM_CONFIG.apiUrl) || '';
-      const isLocal = ['localhost','127.0.0.1'].includes(location.hostname);
-      const apiUrl = configuredApi || (isLocal ? '/api/nowplaying' : '');
+      const apiUrl = 'nowplaying.json'; // GitHub Actions updates this on every Pages deployment.
       const demonstration = params.get('demo') === '1';
       let localFirstSeen = 0, lastTrack = '';
       let demoStarted = Date.now() / 1000 - 85;
@@ -190,10 +187,10 @@
         $('artist').textContent=live?(state.artist||'Haul.FM Radio'):
           s==='offline'?'Radioaseman tiedot eivät ole saatavilla':
           s==='no_metadata'?'Lähetys käynnissä • kappaletietoja ei saatavilla':
-          s==='needs_setup'?'GitHub Pages: lisää kappaletietojen API-osoite':'Haetaan kappaletietoja…';
+          'Haetaan kappaletietoja…';
         $('hint').textContent=live?'Haul.FM • Kappale havaittu radiosta':
           s==='offline'?'Tarkista radioaseman yhteys':
-          s==='needs_setup'?'Katso README.md • Cloudflare Worker':'Haul.FM • Live radio';
+          'Haul.FM • Live radio';
         showArtwork(live?state.artwork:null);
         updateProgress();
       }
@@ -209,17 +206,13 @@
           render();
           return;
         }
-        if(!apiUrl){
-          state.status='needs_setup';
-          render();
-          return;
-        }
         pending=true;
         try{
-          const res=await fetch(apiUrl,{cache:'no-store',mode:'cors'});
+          const res=await fetch(apiUrl + '?t=' + Date.now(),{cache:'no-store'});
           if(!res.ok) throw new Error('API HTTP '+res.status);
           const data=await res.json();
-          if(!data || typeof data !== 'object') throw new Error('Virheellinen API-vastaus');
+          if(!data || typeof data !== 'object') throw new Error('Virheellinen kappaletieto');
+          if((Date.now()/1000-Number(data.last_checked||0))>960) data.status='offline';
           // Keep a stable estimate within this browser session even when an edge worker restarts.
           const key=(data.artist||'')+'\u001f'+(data.title||'');
           if(data.status==='live' && data.title){
@@ -241,7 +234,7 @@
           console.warn('HaulFM API ei vastaa',e);
         }finally{pending=false;}
       }
-      updateBrandLogo();poll();setInterval(poll,12000);setInterval(updateProgress,1000);
+      updateBrandLogo();poll();setInterval(poll,30000);setInterval(updateProgress,1000);
     })();
   </script>
 </body>
