@@ -65,7 +65,7 @@ Right-click the overlay to open its menu. The application currently uses these F
 
 ## Updates
 
-**Latest version: 1.2.15.** To check for and install an update, right-click the overlay → **Tarkista päivitykset** (Check for updates). Use **Sulje** (Close) in the same menu to exit.
+**Latest version: 1.2.16.** To check for and install an update, right-click the overlay → **Tarkista päivitykset** (Check for updates). Use **Sulje** (Close) in the same menu to exit.
 
 The application also checks for updates at startup. When you approve an update, it downloads the new EXE, replaces the current executable and restarts. A backup of the previous executable is kept with a `.previous` suffix.
 
@@ -74,6 +74,8 @@ Updating requires an internet connection and write access to the application's f
 If an older version displays **Failed to load Python DLL** after updating, close the application and install the latest version using the installer linked above. The fix is included in version **1.2.10** and later.
 
 ## Recent changes
+
+- **1.2.16:** fixed the rectangular background around the card. The area outside the rounded corners is transparent and the corner radius scales with the window.
 
 - **1.2.15:** fixed the overlay being clipped or disappearing when enlarged. Resizing keeps the full card within the visible monitor area.
 

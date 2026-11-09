@@ -63,7 +63,7 @@ Napsauta overlayta hiiren oikealla:
 
 ## Päivitykset
 
-**Uusin versio: 1.2.15.** Tarkista ja asenna päivitys napsauttamalla overlayta hiiren oikealla → **Tarkista päivitykset**. Sulkeminen onnistuu saman valikon **Sulje**-kohdasta.
+**Uusin versio: 1.2.16.** Tarkista ja asenna päivitys napsauttamalla overlayta hiiren oikealla → **Tarkista päivitykset**. Sulkeminen onnistuu saman valikon **Sulje**-kohdasta.
 
 Uusi versio tarkistetaan myös käynnistyessä. Kun hyväksyt päivityksen, sovellus lataa uuden EXE:n, korvaa nykyisen tiedoston ja käynnistyy uudelleen. Aiemmasta EXE:stä jää `.previous`-varmuuskopio.
 
@@ -72,6 +72,8 @@ Päivitys vaatii internet-yhteyden ja kirjoitusoikeuden kansioon, jossa EXE sija
 Jos käytössäsi on vanha versio, jossa päivityksen jälkeen tulee **Failed to load Python DLL** -virhe, sulje sovellus ja asenna uusin versio yllä olevalla installerilla. Korjaus sisältyy versioon **1.2.10**.
 
 ## Viimeisimmät muutokset
+
+- **1.2.16:** korjattu kortin ympärille jäävä suorakulmainen tausta. Kulmien ulkopuoli on läpinäkyvä ja pyöristys skaalautuu ikkunan mukana.
 
 - **1.2.15:** korjattu overlayn leikkautuminen ja katoaminen suureksi venytettäessä. Koon muuttaminen pitää koko kortin näytön näkyvällä alueella.
 
