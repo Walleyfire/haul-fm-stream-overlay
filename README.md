@@ -4,9 +4,9 @@
 
 Kevyt Windows-overlay, joka näyttää Haul.FM-radion parhaillaan soivan kappaleen omassa, muiden ikkunoiden päällä pysyvässä ikkunassa.
 
-![HaulFM Overlayn esimerkkikuva](preview.png)
+![HaulFM Overlayn esimerkkikuva](preview-fi.jpg)
 
-*Esimerkkikuva ulkoasusta. Kappale, kansikuva ja aikatiedot vaihtuvat lähetyksen mukaan.*
+*Suomenkielinen esikatselu versiosta 1.2.18, kuvattu sovelluksen testitilassa. Kappale, kansikuva ja aikatiedot vaihtuvat lähetyksen mukaan.*
 
 ## Lataa
 
