@@ -1,5 +1,7 @@
 # HaulFM Overlay
 
+**Suomi** | [English](README.en.md)
+
 Kevyt Windows-overlay, joka näyttää Haul.FM-radion parhaillaan soivan kappaleen omassa, muiden ikkunoiden päällä pysyvässä ikkunassa.
 
 ![HaulFM Overlayn esimerkkikuva](preview.png)
