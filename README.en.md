@@ -65,7 +65,7 @@ Right-click the overlay to open its menu. The application currently uses these F
 
 ## Updates
 
-**Latest version: 1.2.16.** To check for and install an update, right-click the overlay → **Tarkista päivitykset** (Check for updates). Use **Sulje** (Close) in the same menu to exit.
+**Latest version: 1.2.17.** To check for and install an update, right-click the overlay → **Tarkista päivitykset** (Check for updates). Use **Sulje** (Close) in the same menu to exit.
 
 The application also checks for updates at startup. When you approve an update, it downloads the new EXE, replaces the current executable and restarts. A backup of the previous executable is kept with a `.previous` suffix.
 
@@ -74,6 +74,8 @@ Updating requires an internet connection and write access to the application's f
 If an older version displays **Failed to load Python DLL** after updating, close the application and install the latest version using the installer linked above. The fix is included in version **1.2.10** and later.
 
 ## Recent changes
+
+- **1.2.17:** fixed the mouse input regression in version 1.2.16. The right-click menu, moving and resizing work again. Rounded corner clipping is retained.
 
 - **1.2.16:** fixed the rectangular background around the card. The area outside the rounded corners is transparent and the corner radius scales with the window.
 
@@ -84,6 +86,10 @@ If an older version displays **Failed to load Python DLL** after updating, close
 - **1.2.12:** added a standalone installer, Start menu shortcuts and uninstall support through Windows Settings. The installer can be deleted after installation.
 - **1.2.11:** added the custom HaulFM application and shortcut icon.
 - **1.2.10:** fixed restarting after an update and added a desktop shortcut.
+
+## If version 1.2.16 does not respond to mouse input
+
+Close **HaulFM-Overlay.exe** in Windows Task Manager and run the latest **HaulFM Overlay installer.exe**. Open the overlay again using its shortcut. Use the installer rather than the in-app update menu if the menu cannot be opened.
 
 ## If the overlay disappears after resizing
 

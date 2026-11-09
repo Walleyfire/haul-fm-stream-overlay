@@ -63,7 +63,7 @@ Napsauta overlayta hiiren oikealla:
 
 ## Päivitykset
 
-**Uusin versio: 1.2.16.** Tarkista ja asenna päivitys napsauttamalla overlayta hiiren oikealla → **Tarkista päivitykset**. Sulkeminen onnistuu saman valikon **Sulje**-kohdasta.
+**Uusin versio: 1.2.17.** Tarkista ja asenna päivitys napsauttamalla overlayta hiiren oikealla → **Tarkista päivitykset**. Sulkeminen onnistuu saman valikon **Sulje**-kohdasta.
 
 Uusi versio tarkistetaan myös käynnistyessä. Kun hyväksyt päivityksen, sovellus lataa uuden EXE:n, korvaa nykyisen tiedoston ja käynnistyy uudelleen. Aiemmasta EXE:stä jää `.previous`-varmuuskopio.
 
@@ -72,6 +72,8 @@ Päivitys vaatii internet-yhteyden ja kirjoitusoikeuden kansioon, jossa EXE sija
 Jos käytössäsi on vanha versio, jossa päivityksen jälkeen tulee **Failed to load Python DLL** -virhe, sulje sovellus ja asenna uusin versio yllä olevalla installerilla. Korjaus sisältyy versioon **1.2.10**.
 
 ## Viimeisimmät muutokset
+
+- **1.2.17:** korjattu version 1.2.16 hiiren klikkausongelma. Hiiren oikean painikkeen valikko, siirtäminen ja koon muuttaminen toimivat jälleen. Pyöristettyjen kulmien rajaus säilyy.
 
 - **1.2.16:** korjattu kortin ympärille jäävä suorakulmainen tausta. Kulmien ulkopuoli on läpinäkyvä ja pyöristys skaalautuu ikkunan mukana.
 
@@ -82,6 +84,10 @@ Jos käytössäsi on vanha versio, jossa päivityksen jälkeen tulee **Failed to
 - **1.2.12:** lisätty erillinen installer, Käynnistä-valikon pikakuvakkeet ja Windowsin kautta toimiva asennuksen poisto. Installerin voi poistaa asennuksen jälkeen.
 - **1.2.11:** oma HaulFM-kuvake sovellukseen ja pikakuvakkeeseen.
 - **1.2.10:** korjattu päivityksen jälkeinen uudelleenkäynnistys ja lisätty työpöydän pikakuvake.
+
+## Jos version 1.2.16 overlay ei reagoi hiireen
+
+Sulje **HaulFM-Overlay.exe** Windowsin Tehtävienhallinnasta ja suorita uusin **HaulFM Overlay installer.exe**. Avaa overlay sen jälkeen pikakuvakkeesta. Älä yritä päivittää hiirellä valikosta, jos valikko ei avaudu.
 
 ## Jos overlay ei näy suuren koon muuttamisen jälkeen
 
