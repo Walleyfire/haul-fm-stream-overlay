@@ -59,16 +59,25 @@ Valitse pelin näyttötilaksi **reunaton koko näyttö** tai **ikkunatila**, jot
 Napsauta overlayta hiiren oikealla:
 
 - **Tarkista päivitykset** hakee GitHubissa olevan uusimman EXE:n.
-- **GitHub-repository…** vaihtaa päivityslähteen. Tämän projektin osoite on valmiiksi asetettu.
 - **Sulje** lopettaa sovelluksen.
 
 ## Päivitykset
+
+**Uusin versio: 1.2.14.** Tarkista ja asenna päivitys napsauttamalla overlayta hiiren oikealla → **Tarkista päivitykset**. Sulkeminen onnistuu saman valikon **Sulje**-kohdasta.
 
 Uusi versio tarkistetaan myös käynnistyessä. Kun hyväksyt päivityksen, sovellus lataa uuden EXE:n, korvaa nykyisen tiedoston ja käynnistyy uudelleen. Aiemmasta EXE:stä jää `.previous`-varmuuskopio.
 
 Päivitys vaatii internet-yhteyden ja kirjoitusoikeuden kansioon, jossa EXE sijaitsee. Voit myös sulkea sovelluksen ja suorittaa uusimman installerin uudelleen. Se päivittää aiemman asennuksen samaan kansioon.
 
 Jos käytössäsi on vanha versio, jossa päivityksen jälkeen tulee **Failed to load Python DLL** -virhe, sulje sovellus ja asenna uusin versio yllä olevalla installerilla. Korjaus sisältyy versioon **1.2.10**.
+
+## Viimeisimmät muutokset
+
+- **1.2.14:** poistettu päivityslähteen vaihtaminen hiiren oikean painikkeen valikosta. Valikossa ovat **Tarkista päivitykset** ja **Sulje**. Päivitetty suomen- ja englanninkieliset ohjeet.
+- **1.2.13:** overlay muistaa sijaintinsa ja kokonsa seuraavalla käynnistyksellä. Lisätty WebView2 Runtimen asennusohjeet.
+- **1.2.12:** lisätty erillinen installer, Käynnistä-valikon pikakuvakkeet ja Windowsin kautta toimiva asennuksen poisto. Installerin voi poistaa asennuksen jälkeen.
+- **1.2.11:** oma HaulFM-kuvake sovellukseen ja pikakuvakkeeseen.
+- **1.2.10:** korjattu päivityksen jälkeinen uudelleenkäynnistys ja lisätty työpöydän pikakuvake.
 
 ## Asennuksen poistaminen
 

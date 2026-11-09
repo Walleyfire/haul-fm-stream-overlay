@@ -61,16 +61,25 @@ Right-click the overlay to open its menu. The application currently uses these F
 | Menu label | Meaning |
 | --- | --- |
 | **Tarkista päivitykset** | Check for updates from GitHub. |
-| **GitHub-repository…** | Change the update source. This project's repository is already configured. |
 | **Sulje** | Close the overlay. |
 
 ## Updates
+
+**Latest version: 1.2.14.** To check for and install an update, right-click the overlay → **Tarkista päivitykset** (Check for updates). Use **Sulje** (Close) in the same menu to exit.
 
 The application also checks for updates at startup. When you approve an update, it downloads the new EXE, replaces the current executable and restarts. A backup of the previous executable is kept with a `.previous` suffix.
 
 Updating requires an internet connection and write access to the application's folder. You can also close the overlay and run the latest installer again to update the existing installation in the same folder.
 
 If an older version displays **Failed to load Python DLL** after updating, close the application and install the latest version using the installer linked above. The fix is included in version **1.2.10** and later.
+
+## Recent changes
+
+- **1.2.14:** removed the update-source setting from the right-click menu. The menu now contains **Tarkista päivitykset** (Check for updates) and **Sulje** (Close). Updated both Finnish and English instructions.
+- **1.2.13:** the overlay remembers its position and size between launches. Added WebView2 Runtime installation instructions.
+- **1.2.12:** added a standalone installer, Start menu shortcuts and uninstall support through Windows Settings. The installer can be deleted after installation.
+- **1.2.11:** added the custom HaulFM application and shortcut icon.
+- **1.2.10:** fixed restarting after an update and added a desktop shortcut.
 
 ## Uninstalling
 
