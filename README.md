@@ -17,13 +17,19 @@ Windowsin 64-bittinen versio. Pythonia ei tarvitse asentaa. Sovellus tarvitsee i
 ## Käyttöönotto
 
 1. Lataa **HaulFM Overlay installer.exe** ja käynnistä se.
-2. Seuraa asennusohjelman ohjeita. Sovellus asennetaan omalle Windows-käyttäjällesi.
+2. Valitse installerissa **Suomi** tai **English** ja seuraa ohjeita. Valinta vaihtaa myös overlayn tekstit ja valikon. Sovellus asennetaan omalle Windows-käyttäjällesi.
 3. Avaa overlay työpöydän tai Käynnistä-valikon **HaulFM Overlay** -pikakuvakkeesta.
 4. Siirrä overlay vetämällä kortista ja muuta kokoa vetämällä reunasta tai kulmasta. Sijainti ja koko muistetaan seuraavalla käynnistyksellä.
 
 **Installerin voi poistaa asennuksen jälkeen.** Pikakuvake avaa asennetun sovelluksen, joten se ei tarvitse ladattua installeria.
 
 Asennuskansio on `%LOCALAPPDATA%\Programs\HaulFM Overlay`. Sovellus ei vaadi järjestelmänvalvojan oikeuksia.
+
+## Kielen vaihtaminen
+
+Installerin kielivalinta määrää myös sovelluksen kielen. **English** vaihtaa overlayn tilatekstit, hiiren oikean painikkeen valikon ja päivitysviestit englanniksi. Kieli säilyy myös päivitysten jälkeen.
+
+Jos haluat vaihtaa jo asennetun sovelluksen kielen, sulje overlay, suorita uusin installer uudelleen ja valitse haluamasi kieli. Avaa overlay uudelleen pikakuvakkeesta.
 
 ## Jos WebView2 Runtime puuttuu
 
@@ -43,6 +49,8 @@ Ohjeen lähde: [Microsoftin WebView2 Runtime -jakeluohje](https://learn.microsof
 - Parhaillaan soiva kappale ja artisti.
 - Kappaleen kansikuva, kun se on saatavilla; muuten varakuva.
 - Pyöristetyt kulmat ja säädettävä koko.
+- Logon vihreään sävyyn sopivat ON AIR -piste, NOW PLAYING -teksti ja etenemispalkki.
+- Suomen- ja englanninkielinen käyttöliittymä installerin valinnan mukaan.
 - Ikkunan sijainnin ja koon automaattinen tallennus.
 - Muiden ikkunoiden päällä pysyvä overlay.
 - Kappaleen ensihavainnosta kulunut aika. Etenemispalkki näkyy, kun kappaleen kesto tunnetaan.
@@ -56,14 +64,14 @@ Valitse pelin näyttötilaksi **reunaton koko näyttö** tai **ikkunatila**, jot
 
 ## Valikko ja sulkeminen
 
-Napsauta overlayta hiiren oikealla:
+Napsauta overlayta hiiren oikealla. Suomenkielisessä näkymässä valinnat ovat:
 
 - **Tarkista päivitykset** hakee GitHubissa olevan uusimman EXE:n.
 - **Sulje** lopettaa sovelluksen.
 
 ## Päivitykset
 
-**Uusin versio: 1.2.17.** Tarkista ja asenna päivitys napsauttamalla overlayta hiiren oikealla → **Tarkista päivitykset**. Sulkeminen onnistuu saman valikon **Sulje**-kohdasta.
+**Uusin versio: 1.2.18.** Tarkista ja asenna päivitys napsauttamalla overlayta hiiren oikealla → **Tarkista päivitykset**. Sulkeminen onnistuu saman valikon **Sulje**-kohdasta.
 
 Uusi versio tarkistetaan myös käynnistyessä. Kun hyväksyt päivityksen, sovellus lataa uuden EXE:n, korvaa nykyisen tiedoston ja käynnistyy uudelleen. Aiemmasta EXE:stä jää `.previous`-varmuuskopio.
 
@@ -72,6 +80,8 @@ Päivitys vaatii internet-yhteyden ja kirjoitusoikeuden kansioon, jossa EXE sija
 Jos käytössäsi on vanha versio, jossa päivityksen jälkeen tulee **Failed to load Python DLL** -virhe, sulje sovellus ja asenna uusin versio yllä olevalla installerilla. Korjaus sisältyy versioon **1.2.10**.
 
 ## Viimeisimmät muutokset
+
+- **1.2.18:** installerin kielivalinta välittyy myös overlayyn ja säilyy päivityksissä. Lisätty englanninkieliset tila- ja päivitystekstit sekä valikko. ON AIR -piste, NOW PLAYING -teksti ja etenemispalkki ovat logon vihreän sävyiset. Vaihdettu kulmien rajaus koko ikkunan pyöristykseen.
 
 - **1.2.17:** korjattu version 1.2.16 hiiren klikkausongelma. Hiiren oikean painikkeen valikko, siirtäminen ja koon muuttaminen toimivat jälleen. Pyöristettyjen kulmien rajaus säilyy.
 

@@ -17,13 +17,19 @@ Requires 64-bit Windows, an internet connection and Microsoft Edge WebView2 Runt
 ## Getting started
 
 1. Download and run **HaulFM Overlay installer.exe**.
-2. Follow the installation instructions. The application is installed for your Windows user account.
+2. Select **English** or **Suomi** in the installer and follow its instructions. This also sets the overlay text and menu language. The application is installed for your Windows user account.
 3. Open the overlay using the **HaulFM Overlay** shortcut on your desktop or in the Start menu.
 4. Drag the card to move it. Drag an edge or corner to resize it. The position and size are remembered the next time you launch the overlay.
 
 **You can delete the installer after installation.** The shortcut opens the installed application and does not need the downloaded installer.
 
 The installation folder is `%LOCALAPPDATA%\Programs\HaulFM Overlay`. Administrator privileges are not required to install the overlay.
+
+## Changing the language
+
+The installer language also sets the application language. Select **English** for English overlay status text, the right-click menu and update messages. The selected language is preserved across application updates.
+
+To change the language of an existing installation, close the overlay, run the latest installer again and choose the desired language. Open the overlay again using its shortcut.
 
 ## If WebView2 Runtime is missing
 
@@ -43,6 +49,8 @@ Reference: [Microsoft's WebView2 Runtime distribution guide](https://learn.micro
 - Current track title and artist.
 - Track artwork when available, with a fallback image otherwise.
 - Rounded corners and adjustable size.
+- An ON AIR indicator, NOW PLAYING text and progress bar matching the logo’s green accent.
+- Finnish and English interfaces selected through the installer.
 - Automatically saved window position and size.
 - An overlay that stays on top of other windows.
 - Time elapsed since the track was first detected. A progress bar appears when the track duration is known.
@@ -56,16 +64,16 @@ Use **borderless fullscreen** or **windowed mode** so the overlay can appear abo
 
 ## Menu and closing the overlay
 
-Right-click the overlay to open its menu. The application currently uses these Finnish menu labels:
+Right-click the overlay to open its menu. Labels follow the language selected in the installer:
 
 | Menu label | Meaning |
 | --- | --- |
-| **Tarkista päivitykset** | Check for updates from GitHub. |
-| **Sulje** | Close the overlay. |
+| **Check for updates** / **Tarkista päivitykset** | Check for updates from GitHub. |
+| **Close** / **Sulje** | Close the overlay. |
 
 ## Updates
 
-**Latest version: 1.2.17.** To check for and install an update, right-click the overlay → **Tarkista päivitykset** (Check for updates). Use **Sulje** (Close) in the same menu to exit.
+**Latest version: 1.2.18.** To check for and install an update, right-click the overlay → **Check for updates** (Finnish: **Tarkista päivitykset**). Use **Close** (Finnish: **Sulje**) in the same menu to exit.
 
 The application also checks for updates at startup. When you approve an update, it downloads the new EXE, replaces the current executable and restarts. A backup of the previous executable is kept with a `.previous` suffix.
 
@@ -74,6 +82,8 @@ Updating requires an internet connection and write access to the application's f
 If an older version displays **Failed to load Python DLL** after updating, close the application and install the latest version using the installer linked above. The fix is included in version **1.2.10** and later.
 
 ## Recent changes
+
+- **1.2.18:** the installer language now controls the overlay language and persists across updates. Added English status text, menus and update messages. The ON AIR indicator, NOW PLAYING text and progress bar now match the logo’s green accent. Rounded clipping now applies to the whole window.
 
 - **1.2.17:** fixed the mouse input regression in version 1.2.16. The right-click menu, moving and resizing work again. Rounded corner clipping is retained.
 
@@ -97,11 +107,11 @@ Close **HaulFM-Overlay.exe** using Windows Task Manager, then install the latest
 
 ## Uninstalling
 
-1. Close the overlay: right-click → **Sulje** (Close).
+1. Close the overlay: right-click → **Close** (Finnish: **Sulje**).
 2. Open Windows **Settings → Apps → Installed apps** (Windows 10: **Apps & features**).
 3. Find **HaulFM Overlay** and select **Uninstall**.
 
-Alternatively, open the **HaulFM Overlay** folder in the Start menu and select **Poista HaulFM Overlay** (Uninstall HaulFM Overlay).
+Alternatively, open the **HaulFM Overlay** folder in the Start menu and select **Uninstall HaulFM Overlay** (Finnish: **Poista HaulFM Overlay**).
 
 Uninstalling removes the installed application, its shortcuts, the update backup, the overlay's update and window position/size settings, and its saved icons. The original downloaded installer is not needed to uninstall. You can delete any installer left in your Downloads folder yourself.
 
