@@ -63,7 +63,7 @@ Napsauta overlayta hiiren oikealla:
 
 ## Päivitykset
 
-**Uusin versio: 1.2.14.** Tarkista ja asenna päivitys napsauttamalla overlayta hiiren oikealla → **Tarkista päivitykset**. Sulkeminen onnistuu saman valikon **Sulje**-kohdasta.
+**Uusin versio: 1.2.15.** Tarkista ja asenna päivitys napsauttamalla overlayta hiiren oikealla → **Tarkista päivitykset**. Sulkeminen onnistuu saman valikon **Sulje**-kohdasta.
 
 Uusi versio tarkistetaan myös käynnistyessä. Kun hyväksyt päivityksen, sovellus lataa uuden EXE:n, korvaa nykyisen tiedoston ja käynnistyy uudelleen. Aiemmasta EXE:stä jää `.previous`-varmuuskopio.
 
@@ -73,11 +73,17 @@ Jos käytössäsi on vanha versio, jossa päivityksen jälkeen tulee **Failed to
 
 ## Viimeisimmät muutokset
 
+- **1.2.15:** korjattu overlayn leikkautuminen ja katoaminen suureksi venytettäessä. Koon muuttaminen pitää koko kortin näytön näkyvällä alueella.
+
 - **1.2.14:** poistettu päivityslähteen vaihtaminen hiiren oikean painikkeen valikosta. Valikossa ovat **Tarkista päivitykset** ja **Sulje**. Päivitetty suomen- ja englanninkieliset ohjeet.
 - **1.2.13:** overlay muistaa sijaintinsa ja kokonsa seuraavalla käynnistyksellä. Lisätty WebView2 Runtimen asennusohjeet.
 - **1.2.12:** lisätty erillinen installer, Käynnistä-valikon pikakuvakkeet ja Windowsin kautta toimiva asennuksen poisto. Installerin voi poistaa asennuksen jälkeen.
 - **1.2.11:** oma HaulFM-kuvake sovellukseen ja pikakuvakkeeseen.
 - **1.2.10:** korjattu päivityksen jälkeinen uudelleenkäynnistys ja lisätty työpöydän pikakuvake.
+
+## Jos overlay ei näy suuren koon muuttamisen jälkeen
+
+Sulje **HaulFM-Overlay.exe** Windowsin Tehtävienhallinnasta ja asenna uusin versio yllä olevalla installerilla. Avaa overlay uudelleen pikakuvakkeesta. Versio **1.2.15** korjaa suuren koon rajauksen ja sovittaa ikkunan takaisin näytölle käynnistettäessä.
 
 ## Asennuksen poistaminen
 

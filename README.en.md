@@ -65,7 +65,7 @@ Right-click the overlay to open its menu. The application currently uses these F
 
 ## Updates
 
-**Latest version: 1.2.14.** To check for and install an update, right-click the overlay → **Tarkista päivitykset** (Check for updates). Use **Sulje** (Close) in the same menu to exit.
+**Latest version: 1.2.15.** To check for and install an update, right-click the overlay → **Tarkista päivitykset** (Check for updates). Use **Sulje** (Close) in the same menu to exit.
 
 The application also checks for updates at startup. When you approve an update, it downloads the new EXE, replaces the current executable and restarts. A backup of the previous executable is kept with a `.previous` suffix.
 
@@ -75,11 +75,17 @@ If an older version displays **Failed to load Python DLL** after updating, close
 
 ## Recent changes
 
+- **1.2.15:** fixed the overlay being clipped or disappearing when enlarged. Resizing keeps the full card within the visible monitor area.
+
 - **1.2.14:** removed the update-source setting from the right-click menu. The menu now contains **Tarkista päivitykset** (Check for updates) and **Sulje** (Close). Updated both Finnish and English instructions.
 - **1.2.13:** the overlay remembers its position and size between launches. Added WebView2 Runtime installation instructions.
 - **1.2.12:** added a standalone installer, Start menu shortcuts and uninstall support through Windows Settings. The installer can be deleted after installation.
 - **1.2.11:** added the custom HaulFM application and shortcut icon.
 - **1.2.10:** fixed restarting after an update and added a desktop shortcut.
+
+## If the overlay disappears after resizing
+
+Close **HaulFM-Overlay.exe** using Windows Task Manager, then install the latest version using the installer linked above. Open the overlay again using its shortcut. Version **1.2.15** fixes large-size clipping and fits the window back onto the monitor at startup.
 
 ## Uninstalling
 
