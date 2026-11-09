@@ -17,17 +17,31 @@ Windowsin 64-bittinen versio. Pythonia ei tarvitse asentaa. Sovellus tarvitsee i
 1. Lataa **HaulFM Overlay installer.exe** ja käynnistä se.
 2. Seuraa asennusohjelman ohjeita. Sovellus asennetaan omalle Windows-käyttäjällesi.
 3. Avaa overlay työpöydän tai Käynnistä-valikon **HaulFM Overlay** -pikakuvakkeesta.
-4. Siirrä overlay vetämällä kortista ja muuta kokoa vetämällä reunasta tai kulmasta.
+4. Siirrä overlay vetämällä kortista ja muuta kokoa vetämällä reunasta tai kulmasta. Sijainti ja koko muistetaan seuraavalla käynnistyksellä.
 
 **Installerin voi poistaa asennuksen jälkeen.** Pikakuvake avaa asennetun sovelluksen, joten se ei tarvitse ladattua installeria.
 
 Asennuskansio on `%LOCALAPPDATA%\Programs\HaulFM Overlay`. Sovellus ei vaadi järjestelmänvalvojan oikeuksia.
+
+## Jos WebView2 Runtime puuttuu
+
+HaulFM Overlayn installer ei asenna WebView2 Runtimea automaattisesti. Jos overlay ilmoittaa puuttuvasta WebView2:sta tai ei avaudu:
+
+1. Avaa [Microsoftin virallinen WebView2-lataussivu](https://developer.microsoft.com/en-us/microsoft-edge/webview2/#download).
+2. Etsi **Download the WebView2 Runtime** ja valitse **Evergreen Standalone Installer → x64** tavalliselle 64-bittiselle Intel/AMD-Windows-koneelle.
+3. Lataa ja käynnistä Microsoftin asennusohjelma. Seuraa sen ohjeita ja odota asennuksen valmistumista.
+4. Avaa **HaulFM Overlay** uudelleen työpöydän pikakuvakkeesta.
+
+Windowsin **Asetukset → Sovellukset → Asennetut sovellukset** -listasta voit tarkistaa, löytyykö **Microsoft Edge WebView2 Runtime**. Jos asennusohjelma kertoo sen olevan jo asennettu, sitä ei tarvitse asentaa uudelleen. Pelkkä Edge-selaimen asentaminen ei korvaa Runtime-asennusta.
+
+Ohjeen lähde: [Microsoftin WebView2 Runtime -jakeluohje](https://learn.microsoft.com/microsoft-edge/webview2/concepts/distribution).
 
 ## Ominaisuudet
 
 - Parhaillaan soiva kappale ja artisti.
 - Kappaleen kansikuva, kun se on saatavilla; muuten varakuva.
 - Pyöristetyt kulmat ja säädettävä koko.
+- Ikkunan sijainnin ja koon automaattinen tallennus.
 - Muiden ikkunoiden päällä pysyvä overlay.
 - Kappaleen ensihavainnosta kulunut aika. Etenemispalkki näkyy, kun kappaleen kesto tunnetaan.
 - Työpöydän pikakuvake ja sovelluksen sisäinen päivitystoiminto.
@@ -62,7 +76,7 @@ Jos käytössäsi on vanha versio, jossa päivityksen jälkeen tulee **Failed to
 
 Vaihtoehtoisesti avaa Käynnistä-valikon **HaulFM Overlay** -kansiosta **Poista HaulFM Overlay**.
 
-Poistaminen poistaa asennetun sovelluksen, sen pikakuvakkeet, päivityksen varmuuskopion sekä overlayn oman päivitysasetuksen ja tallennetut kuvakkeet. Alkuperäistä ladattua installeria ei tarvita poistamiseen. Lataukset-kansioon jääneen installerin voit poistaa itse.
+Poistaminen poistaa asennetun sovelluksen, sen pikakuvakkeet, päivityksen varmuuskopion sekä overlayn omat päivitys-, sijainti- ja kokoasetukset sekä tallennetut kuvakkeet. Alkuperäistä ladattua installeria ei tarvita poistamiseen. Lataukset-kansioon jääneen installerin voit poistaa itse.
 
 Jos olet käyttänyt aiempaa erillistä, asentamatonta EXE-versiota, poista myös sen vanha `HaulFM-Overlay.exe` ja mahdollinen `.previous`-varmuuskopio siitä kansiosta, johon itse tallensit ne.
 
