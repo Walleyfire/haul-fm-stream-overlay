@@ -4,9 +4,9 @@
 
 Kevyt Windows-overlay, joka näyttää Haul.FM-radion parhaillaan soivan kappaleen omassa, muiden ikkunoiden päällä pysyvässä ikkunassa.
 
-![HaulFM Overlayn esimerkkikuva](preview-fi.jpg)
+![HaulFM Overlayn esimerkkikuva](preview-fi.png)
 
-*Suomenkielinen esikatselu versiosta 1.2.21, kuvattu sovelluksen testitilassa. Kappale, kansikuva ja aikatiedot vaihtuvat lähetyksen mukaan.*
+*Kuvakaappaus version 1.2.21 suomenkielisestä käyttöliittymästä. Esimerkissä Auto DJ ja Tinie Tempahin Pass Out. Kappale, kansikuva ja aikatiedot vaihtuvat lähetyksen mukaan.*
 
 ## Lataa
 

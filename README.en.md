@@ -4,9 +4,9 @@
 
 A Windows overlay that displays the track currently playing on Haul.FM in a small window that stays on top of other applications.
 
-![HaulFM Overlay preview](preview-en.jpg)
+![HaulFM Overlay preview](preview-en.png)
 
-*English preview of version 1.2.21, captured in the application’s demo mode. The track, artwork and timing information change with the broadcast.*
+*Screenshot of version 1.2.21 with the Finnish interface, showing Auto DJ and Pass Out by Tinie Tempah. An English interface is also available. The track, artwork and timing information change with the broadcast.*
 
 ## Download
 
