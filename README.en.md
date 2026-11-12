@@ -6,7 +6,7 @@ A Windows overlay that displays the track currently playing on Haul.FM in a smal
 
 ![HaulFM Overlay preview](preview-en.jpg)
 
-*English preview of version 1.2.18, captured in the application’s demo mode. The track, artwork and timing information change with the broadcast.*
+*English preview of version 1.2.21, captured in the application’s demo mode. The track, artwork and timing information change with the broadcast.*
 
 ## Download
 
@@ -47,6 +47,7 @@ Reference: [Microsoft's WebView2 Runtime distribution guide](https://learn.micro
 ## Features
 
 - Current track title and artist.
+- Prominent **LIVE DJ • presenter name** and show information during live broadcasts, or **Auto DJ** during automated broadcasts.
 - Track artwork when available, with a fallback image otherwise.
 - Rounded corners and adjustable size.
 - An ON AIR indicator, NOW PLAYING text and progress bar matching the logo’s green accent.
@@ -57,6 +58,10 @@ Reference: [Microsoft's WebView2 Runtime distribution guide](https://learn.micro
 - A desktop shortcut and built-in update checking.
 
 The timer starts when the application first detects a track. It does not represent the exact playback position of the broadcast. The application displays track information but **does not play radio audio**.
+
+## Presenter information
+
+The presenter and show name are read from Haul.FM’s own feed approximately every 15 seconds. Presenter text appears below ON AIR in a larger font. Automated broadcasts display **Auto DJ**. Breaks and connection failures have separate status messages. If presenter information cannot be refreshed, the old information expires after 90 seconds. Track metadata is fetched independently.
 
 ## Using the overlay with a game
 
@@ -73,7 +78,11 @@ Right-click the overlay to open its menu. Labels follow the language selected in
 
 ## Updates
 
-**Latest version: 1.2.18.** To check for and install an update, right-click the overlay → **Check for updates** (Finnish: **Tarkista päivitykset**). Use **Close** (Finnish: **Sulje**) in the same menu to exit.
+**Latest version: 1.2.21.** To check for and install an update, right-click the overlay → **Check for updates** (Finnish: **Tarkista päivitykset**). Use **Close** (Finnish: **Sulje**) in the same menu to exit.
+
+Starting with **1.2.20**, an update is accepted only if the downloaded EXE has an embedded Windows version greater than the running version. Equal, older, missing and invalid versions cannot be installed. The version is checked both when offering an update and before installation. If you see **“Update blocked: the EXE version is missing or invalid”**, that candidate is not installed.
+
+Versions **1.2.18 and 1.2.19** do not include this protection. Close the old overlay and run the latest installer linked on this page to apply the fix.
 
 The application also checks for updates at startup. When you approve an update, it downloads the new EXE, replaces the current executable and restarts. A backup of the previous executable is kept with a `.previous` suffix.
 
@@ -82,6 +91,10 @@ Updating requires an internet connection and write access to the application's f
 If an older version displays **Failed to load Python DLL** after updating, close the application and install the latest version using the installer linked above. The fix is included in version **1.2.10** and later.
 
 ## Recent changes
+
+- **1.2.21:** presenter text is 50% larger (12 → 18 px) and bolder.
+- **1.2.20:** fixed update logic that could reinstall an older version. Updates now require a strictly newer version number.
+- **1.2.19:** added Haul.FM live presenter and show information, plus Auto DJ status.
 
 - **1.2.18:** the installer language now controls the overlay language and persists across updates. Added English status text, menus and update messages. The ON AIR indicator, NOW PLAYING text and progress bar now match the logo’s green accent. Rounded clipping now applies to the whole window.
 

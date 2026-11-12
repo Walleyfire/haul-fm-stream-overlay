@@ -6,7 +6,7 @@ Kevyt Windows-overlay, joka näyttää Haul.FM-radion parhaillaan soivan kappale
 
 ![HaulFM Overlayn esimerkkikuva](preview-fi.jpg)
 
-*Suomenkielinen esikatselu versiosta 1.2.18, kuvattu sovelluksen testitilassa. Kappale, kansikuva ja aikatiedot vaihtuvat lähetyksen mukaan.*
+*Suomenkielinen esikatselu versiosta 1.2.21, kuvattu sovelluksen testitilassa. Kappale, kansikuva ja aikatiedot vaihtuvat lähetyksen mukaan.*
 
 ## Lataa
 
@@ -47,6 +47,7 @@ Ohjeen lähde: [Microsoftin WebView2 Runtime -jakeluohje](https://learn.microsof
 ## Ominaisuudet
 
 - Parhaillaan soiva kappale ja artisti.
+- Selkeästi näkyvä **LIVE DJ • juontajan nimi** ja ohjelman nimi live-lähetyksissä; muulloin **Auto DJ** automaattisen lähetyksen aikana.
 - Kappaleen kansikuva, kun se on saatavilla; muuten varakuva.
 - Pyöristetyt kulmat ja säädettävä koko.
 - Logon vihreään sävyyn sopivat ON AIR -piste, NOW PLAYING -teksti ja etenemispalkki.
@@ -58,6 +59,10 @@ Ohjeen lähde: [Microsoftin WebView2 Runtime -jakeluohje](https://learn.microsof
 
 Aikalaskuri alkaa siitä, kun sovellus havaitsee kappaleen. Se ei ole lähetyksen tarkka toistoaika. Sovellus näyttää kappaletiedot, mutta **ei toista radion ääntä**.
 
+## DJ-tiedot
+
+DJ:n nimi ja ohjelman nimi haetaan Haul.FM:n omasta tietosyötteestä noin 15 sekunnin välein. DJ-teksti näkyy ON AIR -tekstin alla aiempaa suurempana. Kun lähetys on automaattinen, siinä lukee **Auto DJ**. Tauko ja yhteysvirhe näytetään omilla tilateksteillään. Jos DJ-tietoa ei saada päivitettyä, vanha tieto poistuu viimeistään 90 sekunnin kuluttua. Kappaletietojen haku toimii DJ-tiedoista erillään.
+
 ## Käyttö pelin kanssa
 
 Valitse pelin näyttötilaksi **reunaton koko näyttö** tai **ikkunatila**, jotta overlay voi näkyä pelin päällä. Yksinomaisessa koko näytön tilassa näkyminen ei ole taattua.
@@ -66,12 +71,16 @@ Valitse pelin näyttötilaksi **reunaton koko näyttö** tai **ikkunatila**, jot
 
 Napsauta overlayta hiiren oikealla. Suomenkielisessä näkymässä valinnat ovat:
 
-- **Tarkista päivitykset** hakee GitHubissa olevan uusimman EXE:n.
+- **Tarkista päivitykset** tarkistaa GitHubista, onko nykyistä uudempi versio saatavilla.
 - **Sulje** lopettaa sovelluksen.
 
 ## Päivitykset
 
-**Uusin versio: 1.2.18.** Tarkista ja asenna päivitys napsauttamalla overlayta hiiren oikealla → **Tarkista päivitykset**. Sulkeminen onnistuu saman valikon **Sulje**-kohdasta.
+**Uusin versio: 1.2.21.** Tarkista ja asenna päivitys napsauttamalla overlayta hiiren oikealla → **Tarkista päivitykset**. Sulkeminen onnistuu saman valikon **Sulje**-kohdasta.
+
+Versiosta **1.2.20** alkaen päivitys hyväksytään vain, jos ladatun EXE:n Windows-versionumero on nykyistä suurempi. Sama tai vanhempi versio sekä puuttuva tai virheellinen versionumero estävät asentamisen. Tarkistus tehdään sekä päivitystä tarjottaessa että ennen asennusta. Jos näet ilmoituksen **”Päivitystä ei asenneta: EXE:n versionumero puuttuu tai on virheellinen”**, tarjottua tiedostoa ei asenneta.
+
+Versioissa **1.2.18 ja 1.2.19** tätä suojausta ei vielä ole. Sulje vanha overlay ja suorita tämän sivun uusin asennin, jotta saat korjauksen käyttöön.
 
 Uusi versio tarkistetaan myös käynnistyessä. Kun hyväksyt päivityksen, sovellus lataa uuden EXE:n, korvaa nykyisen tiedoston ja käynnistyy uudelleen. Aiemmasta EXE:stä jää `.previous`-varmuuskopio.
 
@@ -80,6 +89,10 @@ Päivitys vaatii internet-yhteyden ja kirjoitusoikeuden kansioon, jossa EXE sija
 Jos käytössäsi on vanha versio, jossa päivityksen jälkeen tulee **Failed to load Python DLL** -virhe, sulje sovellus ja asenna uusin versio yllä olevalla installerilla. Korjaus sisältyy versioon **1.2.10**.
 
 ## Viimeisimmät muutokset
+
+- **1.2.21:** DJ-teksti on 50 % suurempi (12 → 18 px) ja vahvempi.
+- **1.2.20:** korjattu päivityslogiikka, joka saattoi asentaa vanhemman version takaisin. Vain nykyistä suurempi versionumero hyväksytään.
+- **1.2.19:** lisätty Haul.FM:n live-DJ:n nimi ja ohjelman nimi sekä Auto DJ -tila.
 
 - **1.2.18:** installerin kielivalinta välittyy myös overlayyn ja säilyy päivityksissä. Lisätty englanninkieliset tila- ja päivitystekstit sekä valikko. ON AIR -piste, NOW PLAYING -teksti ja etenemispalkki ovat logon vihreän sävyiset. Vaihdettu kulmien rajaus koko ikkunan pyöristykseen.
 
