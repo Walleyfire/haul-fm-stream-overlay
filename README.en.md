@@ -4,7 +4,7 @@
 
 A Windows overlay that displays the track currently playing on Haul.FM in a small window that stays on top of other applications.
 
-![HaulFM Overlay preview](preview-en.png)
+![HaulFM Overlay preview](preview-en-1.2.21.png)
 
 *Screenshot of version 1.2.21 with the English interface. The track, artwork and timing information change with the broadcast.*
 
