@@ -1,0 +1,47 @@
+name: Build HaulFM Overlay New from source
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'source/**'
+      - '.github/workflows/source-build.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout committed source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          architecture: 'x64'
+      - name: Install dependencies
+        shell: pwsh
+        working-directory: source
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install "pyinstaller>=6.10,<7"
+      - name: Test new source
+        shell: pwsh
+        working-directory: source
+        run: python -m unittest discover -s . -p "test_*.py"
+      - name: Build executable from new source
+        shell: pwsh
+        working-directory: source
+        run: python -m PyInstaller --noconfirm --clean --onefile --windowed --name HaulFM-Overlay-New --collect-all webview --add-data "ui.html;." app.py
+      - name: Upload independently built new EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: HaulFM-Overlay-New-source-build-win64
+          path: source/dist/HaulFM-Overlay-New.exe
+          if-no-files-found: error
+          retention-days: 14
