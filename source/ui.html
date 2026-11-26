@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HaulFM Overlay – community reference source</title>
+<style>
+  :root { --accent:#c5df50; font-family:Inter,Segoe UI,Arial,sans-serif; color:#f6f8ff; }
+  * {box-sizing:border-box}
+  html,body {width:100%;height:100%;margin:0;overflow:hidden;background:transparent;user-select:none}
+  #card {position:absolute;inset:0;overflow:hidden;border:1px solid #384354;
+    border-radius:17px;background:linear-gradient(115deg,#111a2a,#0d111b 70%);
+    display:flex;align-items:stretch;gap:16px;padding:14px;box-shadow:none}
+  #bgArt {position:absolute;inset:-28px;z-index:0;background-size:cover;background-position:center;
+    opacity:0;filter:blur(28px) brightness(.30)}
+  #card.has-art #bgArt {opacity:.55}
+  .cover {position:relative;flex:none;width:min(29%,143px);min-height:126px;
+    background:#18133b;border-radius:11px;overflow:hidden;border:1px solid #ffffff17}
+  #fallback {width:100%;height:100%;display:flex;justify-content:center;align-items:center;
+    background:linear-gradient(145deg,#232155,#111b35);color:var(--accent);
+    font-size:14px;font-weight:900;letter-spacing:.04em}
+  #fallback img {width:80%;height:80%;object-fit:contain}
+  #coverImg {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+  .cover.loaded #coverImg {display:block}
+  .info {min-width:0;flex:1;position:relative;z-index:1;display:flex;flex-direction:column}
+  .top {display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:29px}
+  .live {font-size:10px;font-weight:800;letter-spacing:1.7px;display:flex;gap:8px;align-items:center}
+  .dot {width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px #bcdf51b0}
+  #wordmark {width:113px;max-height:30px;object-fit:contain;object-position:right}
+  #brandFallback {display:none;font-size:20px;font-weight:900}
+  #brandFallback span {color:var(--accent)}
+  .presenter {height:32px;display:flex;align-items:baseline;gap:8px;min-width:0;margin:5px 0 2px}
+  #djLabel {font-size:10px;font-weight:800;letter-spacing:1px;color:var(--accent);white-space:nowrap}
+  #djName {font-size:18px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #djShow {font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#b3c2d2;min-height:15px}
+  .eyebrow {font-size:10px;font-weight:800;color:var(--accent);letter-spacing:1.5px;margin:5px 0 3px}
+  #title {font-size:19px;font-weight:800;line-height:1.13;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bottom {display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:auto;font-size:11px;color:#ccd5e0}
+  #artist {overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #timer {font-size:11px;font-weight:700;white-space:nowrap}
+  #progress {position:absolute;bottom:0;left:0;width:100%;height:4px;background:#ffffff22;display:none}
+  #progressFill {height:100%;background:var(--accent);width:0;transition:width .75s linear}
+  .resize {position:absolute;right:0;bottom:0;width:20px;height:20px;cursor:nwse-resize;z-index:3}
+  .resize:after {content:"";position:absolute;right:4px;bottom:5px;width:7px;height:7px;
+    border-right:2px solid #aab9cd;border-bottom:2px solid #aab9cd;opacity:.65}
+  .menu {display:none;position:fixed;z-index:10;width:180px;background:#202a3a;border:1px solid #50637a;
+    border-radius:8px;padding:5px;box-shadow:0 7px 24px #0008}
+  .menu button {display:block;width:100%;background:none;border:none;color:#f2f7fc;
+    padding:9px;text-align:left;font:13px Segoe UI,Arial,sans-serif;border-radius:4px;cursor:pointer}
+  .menu button:hover {background:#435069}
+  @media (max-width:470px) {
+    #wordmark {width:80px} #title {font-size:15px}
+    #djName {font-size:15px} .cover {width:29%}
+  }
+</style>
+</head>
+<body>
+<section id="card" class="pywebview-drag-region" aria-label="HaulFM radio overlay">
+  <div id="bgArt"></div>
+  <div class="cover" id="cover">
+    <div id="fallback"><img id="fallbackImg" src="https://haul.fm/brand/icon-96.webp" alt="Haul.FM" /></div>
+    <img id="coverImg" alt="Album artwork" />
+  </div>
+  <div class="info">
+    <div class="top">
+      <div class="live"><span class="dot"></span><span id="onAir">ON AIR</span></div>
+      <div>
+        <img id="wordmark" src="https://haul.fm/brand/wordmark-275.webp" alt="Haul.FM"/>
+        <div id="brandFallback">Haul<span>.FM</span></div>
+      </div>
+    </div>
+    <div class="presenter">
+      <span id="djLabel"></span>
+      <span id="djName">Auto DJ</span>
+    </div>
+    <div id="djShow"></div>
+    <div class="eyebrow" id="nowPlayingLabel">NOW PLAYING</div>
+    <div id="title">Haul.FM</div>
+    <div class="bottom"><span id="artist">Connecting…</span><span id="timer"></span></div>
+  </div>
+  <div id="progress"><div id="progressFill"></div></div>
+  <div class="resize" id="resizeHandle" aria-label="Resize"></div>
+</section>
+<div class="menu" id="menu">
+  <button id="checkButton">Check for updates</button>
+  <button id="closeButton">Close</button>
+</div>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const dictionary = {
+    fi: {onAir:'LÄHETYKSESSÄ',liveDJ:'LIVE DJ',nowPlaying:'NYT SOI',
+      connecting:'Yhdistetään radioon…',unavailable:'Kappaletietoja ei saatavilla',
+      updates:'Tarkista päivitykset',close:'Sulje'},
+    en: {onAir:'ON AIR',liveDJ:'LIVE DJ',nowPlaying:'NOW PLAYING',
+      connecting:'Connecting to radio…',unavailable:'Track metadata unavailable',
+      updates:'Check for updates',close:'Close'}
+  };
+  let language='fi';
+  let data={status:'loading',dj_live:false,dj_name:'Auto DJ'};
+  let coverSource='';
+  let startedAt=0;
+  let lastKey='';
+  const card=$('card');
+
+  function applyLanguage(){
+    const t=dictionary[language];
+    $('onAir').textContent=t.onAir;
+    $('nowPlayingLabel').textContent=t.nowPlaying;
+    $('checkButton').textContent=t.updates;
+    $('closeButton').textContent=t.close;
+    render();
+  }
+  function setCover(url){
+    const desired=typeof url==='string' && url.startsWith('https://')?url:'';
+    if(coverSource===desired)return;
+    coverSource=desired;
+    $('cover').classList.remove('loaded');
+    card.classList.remove('has-art');
+    $('coverImg').removeAttribute('src');
+    $('bgArt').style.backgroundImage='none';
+    if(!desired)return;
+    const img=$('coverImg');
+    img.onload=() => {
+      if(coverSource!==desired)return;
+      $('cover').classList.add('loaded');
+      card.classList.add('has-art');
+      $('bgArt').style.backgroundImage='url("'+desired.replace(/"/g,'%22')+'")';
+    };
+    img.onerror=() => {
+      if(coverSource===desired){coverSource='';setCover('');}
+    };
+    img.src=desired;
+    if(img.complete && img.naturalWidth>0)img.onload();
+  }
+  function clock(value){
+    const n=Math.max(0,Math.floor(value));
+    return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0');
+  }
+  function tick(){
+    const live=data.status==='live' && Boolean(data.title);
+    const now=Date.now()/1000;
+    const elapsed=live && startedAt>0?Math.max(0,now-startedAt):0;
+    const duration=Number(data.duration);
+    const hasDuration=live && data.duration!=null &&
+      Number.isFinite(duration) && duration>=30 && elapsed<=duration+20;
+    $('timer').textContent=live?clock(elapsed)+' / '+(hasDuration?clock(duration):'--:--'):'';
+    $('progress').style.display=hasDuration?'block':'none';
+    $('progressFill').style.width=hasDuration?(Math.min(100,100*elapsed/duration)).toFixed(1)+'%':'0';
+  }
+  function render(){
+    const t=dictionary[language];
+    const live=data.status==='live'&&Boolean(data.title);
+    $('title').textContent=live?data.title:'Haul.FM';
+    $('artist').textContent=live?(data.artist||'Haul.FM'):
+      data.status==='unavailable'?t.unavailable:t.connecting;
+    const djLive=data.dj_live===true && Boolean(data.dj_name);
+    $('djLabel').textContent=djLive?t.liveDJ:'';
+    $('djName').textContent=djLive?data.dj_name:'Auto DJ';
+    $('djShow').textContent=djLive?(data.dj_show||''):'';
+    setCover(live?data.artwork:null);
+    tick();
+  }
+  window.updateOverlay=next=>{
+    if(!next||typeof next!=='object')return;
+    const key=(next.artist||'')+'\u001f'+(next.title||'');
+    if(next.status==='live'&&next.title){
+      if(key!==lastKey){
+        lastKey=key;
+        startedAt=Number(next.first_seen)>0?Number(next.first_seen):Date.now()/1000;
+      }
+    }else{
+      lastKey='';
+      startedAt=0;
+    }
+    data=next;
+    render();
+  };
+  $('fallbackImg').addEventListener('error',()=>{
+    $('fallback').textContent='Haul.FM';
+  });
+  $('wordmark').addEventListener('error',()=>{
+    $('wordmark').style.display='none';
+    $('brandFallback').style.display='block';
+  });
+  document.addEventListener('contextmenu',event=>{
+    event.preventDefault();
+    const menu=$('menu');
+    menu.style.display='block';
+    menu.style.left=Math.max(0,Math.min(innerWidth-182,event.clientX))+'px';
+    menu.style.top=Math.max(0,Math.min(innerHeight-85,event.clientY))+'px';
+  });
+  document.addEventListener('pointerdown',event=>{
+    if(!event.target.closest('#menu'))$('menu').style.display='none';
+  });
+  $('checkButton').addEventListener('click',()=>{
+    $('menu').style.display='none';
+    window.pywebview?.api?.check_updates?.();
+  });
+  $('closeButton').addEventListener('click',()=>{
+    window.pywebview?.api?.close_window?.();
+  });
+  let resizing=false,dragX=0,dragY=0,startWidth=0,startHeight=0;
+  $('resizeHandle').addEventListener('pointerdown',event=>{
+    event.preventDefault();event.stopPropagation();
+    resizing=true;dragX=event.screenX;dragY=event.screenY;
+    startWidth=innerWidth;startHeight=innerHeight;
+    $('resizeHandle').setPointerCapture(event.pointerId);
+  });
+  $('resizeHandle').addEventListener('pointermove',event=>{
+    if(!resizing)return;
+    const width=Math.round(Math.max(420,startWidth+event.screenX-dragX));
+    const height=Math.round(Math.max(160,startHeight+event.screenY-dragY));
+    window.pywebview?.api?.resize_window?.(width,height);
+  });
+  $('resizeHandle').addEventListener('pointerup',()=>{resizing=false;});
+  window.addEventListener('pywebviewready',()=>{
+    window.pywebview.api.config_for_ui().then(config=>{
+      if(config?.language==='en')language='en';
+      applyLanguage();
+    });
+  });
+  setInterval(tick,1000);
+  applyLanguage();
+})();
+</script>
+</body>
+</html>
