@@ -8,6 +8,16 @@ A Windows overlay that displays the track currently playing on Haul.FM in a smal
 
 *Screenshot of version 1.2.21 with the English interface. The track, artwork and timing information change with the broadcast.*
 
+## Source code for the new version
+
+**[Browse the new HaulFM Overlay source (source/)](source/)**
+
+The `source/` directory contains the **editable code of a newly developed overlay implementation**, including Python, HTML, CSS, JavaScript, tests, Windows build instructions and optional installer sources.
+
+**[Build the new EXE using GitHub Actions](https://github.com/Walleyfire/haul-fm-stream-overlay/actions/workflows/source-build.yml)** creates `HaulFM-Overlay-New.exe` directly from this committed code.
+
+The existing `HaulFM-Overlay.exe` and `HaulFM Overlay installer.exe` in the repository root are still the **legacy v1.2.21 binaries**. The new implementation is separately maintained and is not claimed to be their exact original source. It will not replace them automatically.
+
 ## Download
 
 **[Download HaulFM Overlay installer.exe](https://github.com/Walleyfire/haul-fm-stream-overlay/raw/refs/heads/main/HaulFM%20Overlay%20installer.exe)**
