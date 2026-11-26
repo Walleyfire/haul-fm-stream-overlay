@@ -8,6 +8,16 @@ Kevyt Windows-overlay, joka näyttää Haul.FM-radion parhaillaan soivan kappale
 
 *Kuvakaappaus version 1.2.21 suomenkielisestä käyttöliittymästä. Esimerkissä Auto DJ ja Tinie Tempahin Pass Out. Kappale, kansikuva ja aikatiedot vaihtuvat lähetyksen mukaan.*
 
+## Uuden version lähdekoodi
+
+**[Avaa uuden HaulFM Overlayn lähdekoodi (source/)](source/)**
+
+`source/` sisältää uuden, itsenäisesti kirjoitetun ja muokattavan overlay-version Python-, HTML-, CSS- ja JavaScript-koodin. Sen mukana ovat testit, PowerShell-rakennusskripti ja erillisen Windows-asennusohjelman määrittely.
+
+**[Uuden version Windows-koonti GitHub Actionsissa](https://github.com/Walleyfire/haul-fm-stream-overlay/actions/workflows/source-build.yml)** rakentaa `HaulFM-Overlay-New.exe`-tiedoston juuri tämän uuden lähdekoodin perusteella.
+
+**Ero nykyiseen ladattavaan versioon:** Repositorion juuressa olevat `HaulFM-Overlay.exe` ja `HaulFM Overlay installer.exe` ovat edelleen vanhaa v1.2.21-julkaisua. Uuden `source/`-version lähdekoodi ei ole väite niiden alkuperäisestä lähdekoodista, eikä se korvaa niitä automaattisesti. Uutta toteutusta voi kehittää erikseen ja julkaista myöhemmin omana versionaan.
+
 ## Lataa
 
 **[Lataa HaulFM Overlay installer.exe](https://github.com/Walleyfire/haul-fm-stream-overlay/raw/refs/heads/main/HaulFM%20Overlay%20installer.exe)**
