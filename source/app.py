@@ -22,8 +22,16 @@ DEFAULTS = {"language": "fi", "width": 600, "height": 198, "x": None, "y": None}
 
 
 def source_path(name: str) -> Path:
+    """Bundled UI asset, taken from PyInstaller's temporary bundle if frozen."""
     base = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
     return base / name
+
+
+def config_file() -> Path:
+    """User-editable configuration alongside the executable or source files."""
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).resolve().parent / "config.json"
+    return Path(__file__).resolve().parent / "config.json"
 
 
 def settings_file() -> Path:
@@ -40,7 +48,7 @@ def load_settings() -> dict:
     except (OSError, ValueError):
         pass
     try:
-        file_config = json.loads(source_path("config.json").read_text(encoding="utf-8"))
+        file_config = json.loads(config_file().read_text(encoding="utf-8"))
         if isinstance(file_config, dict):
             if file_config.get("language") in ("fi", "en"):
                 config["language"] = file_config["language"]
