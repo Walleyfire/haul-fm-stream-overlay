@@ -10,7 +10,7 @@ try {
     if ($LASTEXITCODE -ne 0) { throw "Installing PyInstaller failed." }
     py -3 -m unittest discover -s . -p "test_*.py"
     if ($LASTEXITCODE -ne 0) { throw "Source tests failed." }
-    py -3 -m PyInstaller --noconfirm --clean --onefile --windowed --name "HaulFM-Overlay-New" --collect-all webview --add-data "ui.html;." app.py
+    py -3 -m PyInstaller --noconfirm --clean --onefile --windowed --name "HaulFM-Overlay-New" --collect-all webview --collect-all pypresence --add-data "ui.html;." app.py
     if ($LASTEXITCODE -ne 0) { throw "Building the EXE failed." }
     $built = Join-Path $sourceDir "dist\HaulFM-Overlay-New.exe"
     if (!(Test-Path $built)) { throw "Expected output EXE was not created." }
