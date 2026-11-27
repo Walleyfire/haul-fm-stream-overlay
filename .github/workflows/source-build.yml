@@ -37,7 +37,7 @@ jobs:
       - name: Build executable from new source
         shell: pwsh
         working-directory: source
-        run: python -m PyInstaller --noconfirm --clean --onefile --windowed --name HaulFM-Overlay-New --collect-all webview --add-data "ui.html;." app.py
+        run: python -m PyInstaller --noconfirm --clean --onefile --windowed --name HaulFM-Overlay-New --collect-all webview --collect-all pypresence --add-data "ui.html;." app.py
       - name: Upload independently built new EXE
         uses: actions/upload-artifact@v4
         with:
