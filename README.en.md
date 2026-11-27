@@ -18,6 +18,8 @@ The `source/` directory contains the **editable code of a newly developed overla
 
 The existing `HaulFM-Overlay.exe` and `HaulFM Overlay installer.exe` in the repository root are still the **legacy v1.2.21 binaries**. The new implementation is separately maintained and is not claimed to be their exact original source. It will not replace them automatically.
 
+**Discord Rich Presence in the new source edition:** `source/discord_presence.py` publishes the track, artist, live presenter or Auto DJ, and album artwork (with a Haul.FM fallback). It requires the Discord desktop app and your own Discord Application ID in `source/config.json`. [Setup instructions](source/README.md#discord-rich-presence). This does not modify the old v1.2.21 installer.
+
 ## Download
 
 **[Download HaulFM Overlay installer.exe](https://github.com/Walleyfire/haul-fm-stream-overlay/raw/refs/heads/main/HaulFM%20Overlay%20installer.exe)**
