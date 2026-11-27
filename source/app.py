@@ -16,6 +16,7 @@ from pathlib import Path
 
 import webview
 from radio import RadioClient
+from discord_presence import DiscordRichPresence
 
 PROJECT_URL = "https://github.com/Walleyfire/haul-fm-stream-overlay"
 DEFAULTS = {"language": "fi", "width": 600, "height": 198, "x": None, "y": None}
@@ -54,6 +55,9 @@ def load_settings() -> dict:
                 config["language"] = file_config["language"]
             feed = file_config.get("dj_feed_url", "")
             config["dj_feed_url"] = feed if isinstance(feed, str) else ""
+            discord_id = file_config.get("discord_application_id", "")
+            config["discord_application_id"] = str(discord_id or "").strip()
+            config["discord_rich_presence"] = file_config.get("discord_rich_presence", True) is True
     except (OSError, ValueError):
         pass
     config["width"] = max(420, min(1400, int(config.get("width") or 600)))
@@ -66,6 +70,10 @@ class Bridge:
         self.config = config
         self.window = None
         self.radio = RadioClient(config.get("dj_feed_url", ""))
+        self.discord = DiscordRichPresence(
+            config.get("discord_application_id", ""),
+            enabled=config.get("discord_rich_presence", True),
+        )
         self.stop = threading.Event()
         self.ready = threading.Event()
         self._save_lock = threading.Lock()
@@ -119,16 +127,22 @@ class Bridge:
         self.stop.set()
 
     def run(self):
-        """Network calls occur in a worker; the UI thread is never blocked."""
-        while not self.stop.is_set():
-            data = self.radio.now_playing()
-            data.update(self.radio.presenter())
-            if self.window and self.ready.is_set():
-                try:
-                    self.window.evaluate_js("window.updateOverlay(" + json.dumps(data) + ")")
-                except (RuntimeError, AttributeError, TypeError):
-                    pass
-            self.stop.wait(15)
+        """Network, DJ metadata and Discord RPC use the background worker."""
+        try:
+            while not self.stop.is_set():
+                data = self.radio.now_playing()
+                data.update(self.radio.presenter())
+                # Discord failures are contained and never affect the overlay.
+                self.discord.update(data)
+                if self.window and self.ready.is_set():
+                    try:
+                        self.window.evaluate_js("window.updateOverlay(" + json.dumps(data) + ")")
+                    except (RuntimeError, AttributeError, TypeError):
+                        pass
+                self.stop.wait(15)
+        finally:
+            # Clear our Discord activity on program shutdown.
+            self.discord.close()
 
 
 def main():
