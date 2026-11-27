@@ -1,4 +1,6 @@
 {
   "language": "fi",
-  "dj_feed_url": ""
+  "dj_feed_url": "",
+  "discord_rich_presence": true,
+  "discord_application_id": ""
 }
