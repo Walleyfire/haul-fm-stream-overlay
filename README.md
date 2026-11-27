@@ -18,6 +18,8 @@ Kevyt Windows-overlay, joka näyttää Haul.FM-radion parhaillaan soivan kappale
 
 **Ero nykyiseen ladattavaan versioon:** Repositorion juuressa olevat `HaulFM-Overlay.exe` ja `HaulFM Overlay installer.exe` ovat edelleen vanhaa v1.2.21-julkaisua. Uuden `source/`-version lähdekoodi ei ole väite niiden alkuperäisestä lähdekoodista, eikä se korvaa niitä automaattisesti. Uutta toteutusta voi kehittää erikseen ja julkaista myöhemmin omana versionaan.
 
+**Uuden lähdekoodiversion Discord Rich Presence:** `source/discord_presence.py` näyttää Discordissa kappaleen, artistin, live-DJ:n nimen tai Auto DJ -tilan sekä kansikuvan (tai Haul.FM-varakuvan). Ominaisuus edellyttää Discord-työpöytäsovellusta ja omaa Discord Application ID:tä, joka asetetaan tiedostoon `source/config.json`. [Asetusohjeet](source/README.md#discord-rich-presence). Tämä ei muuta vanhaa v1.2.21-asenninta.
+
 ## Lataa
 
 **[Lataa HaulFM Overlay installer.exe](https://github.com/Walleyfire/haul-fm-stream-overlay/raw/refs/heads/main/HaulFM%20Overlay%20installer.exe)**
